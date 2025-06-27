@@ -30,13 +30,13 @@
   },
   "javascript": {
     "formatter": {
-      "jsxQuoteStyle": "double",
+      "jsxQuoteStyle": "single",
       "quoteProperties": "asNeeded",
       "semicolons": "always",
       "arrowParentheses": "always",
       "bracketSpacing": true,
       "bracketSameLine": false,
-      "quoteStyle": "double"
+      "quoteStyle": "single"
     }
   },
   "json": {
