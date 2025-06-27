@@ -1,135 +1,204 @@
-# Turborepo starter
+# Turbo Monorepo: NestJS + Remix + UI Library
 
-This Turborepo starter is maintained by the Turborepo core team.
+This is a Turbo monorepo containing:
 
-## Using this example
+- **NestJS API** (`apps/api`) - Backend API server
+- **Remix Web App** (`apps/web`) - Frontend web application
+- **Shared UI Library** (`packages/ui`) - Reusable React components
+- **ESLint Config** (`packages/eslint-config`) - Shared ESLint configuration
+- **TypeScript Config** (`packages/typescript-config`) - Shared TypeScript configuration
 
-Run the following command:
-
-```sh
-npx create-turbo@latest
-```
-
-## What's inside?
-
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
+## Architecture
 
 ```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+mono-site/
+├── apps/
+│   ├── api/          # NestJS backend API
+│   └── web/          # Remix frontend app
+├── packages/
+│   ├── ui/           # Shared React components
+│   ├── eslint-config/# Shared ESLint configuration
+│   └── typescript-config/ # Shared TypeScript configuration
+└── turbo.json        # Turbo configuration
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## Getting Started
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+### Prerequisites
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+- Node.js 18+ 
+- npm
 
-### Develop
+### Installation
 
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+```bash
+# Install dependencies
+npm install
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+### Development
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+#### Run all applications
+```bash
+npm run dev
 ```
 
-### Remote Caching
+#### Run individual applications
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+**API Server (NestJS):**
+```bash
+cd apps/api
+npm run start:dev
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+**Web Application (Remix):**
+```bash
+cd apps/web
+npm run dev
 ```
 
-## Useful Links
+The API server runs on `http://localhost:3001` and the web application runs on `http://localhost:5173`.
 
-Learn more about the power of Turborepo:
+### Building
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+```bash
+# Build all packages and applications
+npm run build
+```
+
+### Linting
+
+```bash
+# Lint all packages and applications
+npm run lint
+```
+
+## Features
+
+### 🚀 **NestJS API** (`apps/api`)
+- RESTful API endpoints
+- CORS enabled for frontend consumption
+- TypeScript support
+- Built-in testing with Jest
+
+**Available Endpoints:**
+- `GET /` - Health check
+- `GET /api/data` - Sample data endpoint
+
+### 🎨 **Remix Web App** (`apps/web`)
+- Server-side rendering
+- Uses shared UI components from `@repo/ui`
+- Consumes NestJS API
+- Tailwind CSS for styling
+- TypeScript support
+
+### 📦 **Shared UI Library** (`packages/ui`)
+- Reusable React components
+- TypeScript definitions
+- Shared across all applications
+
+**Available Components:**
+- `Button` - Interactive button component
+- `Card` - Container component for content
+- `Code` - Code display component
+
+### 🔧 **Turborepo Configuration**
+
+The monorepo uses Turborepo for:
+- **Build orchestration** - Builds packages in the correct order
+- **Caching** - Speeds up subsequent builds and tests
+- **Parallel execution** - Runs tasks across multiple packages simultaneously
+
+## Usage Examples
+
+### Using UI Components in Remix
+
+```tsx
+import { Button } from "@repo/ui/button";
+import { Card } from "@repo/ui/card";
+
+export default function MyPage() {
+  return (
+    <Card>
+      <h1>My Page</h1>
+      <Button appName="web">Click me!</Button>
+    </Card>
+  );
+}
+```
+
+### Consuming API in Remix
+
+```tsx
+import type { LoaderFunctionArgs } from "@remix-run/node";
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const response = await fetch('http://localhost:3001/api/data');
+  const data = await response.json();
+  return { data };
+}
+```
+
+## Scripts
+
+### Root Level Scripts
+- `npm run dev` - Start all applications in development mode
+- `npm run build` - Build all packages and applications  
+- `npm run lint` - Lint all packages and applications
+- `npm run format` - Format code with Prettier
+- `npm run check-types` - Type check all TypeScript code
+
+### Application Scripts
+
+**API (`apps/api`):**
+- `npm run start:dev` - Start in development mode with hot reload
+- `npm run build` - Build the application
+- `npm run start:prod` - Start in production mode
+- `npm run test` - Run tests
+
+**Web (`apps/web`):**
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run typecheck` - Type check the application
+
+## Adding New Packages
+
+To add a new package to the monorepo:
+
+1. Create a new directory in `packages/` or `apps/`
+2. Add the package name to the workspace in `package.json`
+3. Create a `package.json` file in the new package
+4. Update `turbo.json` if needed for new build tasks
+
+## Deployment
+
+### API Deployment
+The NestJS API can be deployed to any Node.js hosting service:
+
+```bash
+cd apps/api
+npm run build
+npm run start:prod
+```
+
+### Web Deployment
+The Remix app can be deployed to services that support Node.js:
+
+```bash
+cd apps/web  
+npm run build
+npm run start
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run `npm run lint` and `npm run build` to ensure everything works
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License.
