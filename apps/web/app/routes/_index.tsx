@@ -22,16 +22,16 @@ interface ApiData {
 
 export async function loader() {
   try {
-    const response = await fetch('http://localhost:3001/api/data');
+    const response = await fetch("http://localhost:3001/api/data");
     if (!response.ok) {
-      throw new Error('Failed to fetch data from API');
+      throw new Error("Failed to fetch data from API");
     }
     const data: ApiData = await response.json();
     return { data, error: null };
-  } catch (error) {
-    return { 
-      data: null, 
-      error: 'Unable to connect to API. Make sure the NestJS server is running on port 3001.'
+  } catch (_error) {
+    return {
+      data: null,
+      error: "Unable to connect to API. Make sure the NestJS server is running on port 3001.",
     };
   }
 }
@@ -43,12 +43,8 @@ export default function Index() {
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-4xl mx-auto">
         <header className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Turbo Monorepo Demo
-          </h1>
-          <p className="text-xl text-gray-600 mb-8">
-            Remix + NestJS + Shared UI Components
-          </p>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Turbo Monorepo Demo</h1>
+          <p className="text-xl text-gray-600 mb-8">Remix + NestJS + Shared UI Components</p>
           <div className="flex gap-4 justify-center">
             <Button appName="web">Primary Button</Button>
             <Button appName="remix">Secondary Button</Button>
@@ -67,9 +63,7 @@ export default function Index() {
               </div>
               <div className="p-4 bg-green-50 rounded-lg">
                 <h3 className="font-semibold text-green-900">NestJS API</h3>
-                <p className="text-green-700 text-sm">
-                  Backend API providing data to the frontend
-                </p>
+                <p className="text-green-700 text-sm">Backend API providing data to the frontend</p>
               </div>
               <div className="p-4 bg-purple-50 rounded-lg">
                 <h3 className="font-semibold text-purple-900">Shared UI</h3>
@@ -86,13 +80,16 @@ export default function Index() {
               <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
                 <p className="text-red-700">{error}</p>
                 <p className="text-sm text-red-600 mt-2">
-                  Run <code className="bg-red-100 px-2 py-1 rounded">npm run start:dev</code> in the API directory to start the server.
+                  Run <code className="bg-red-100 px-2 py-1 rounded">npm run start:dev</code> in the
+                  API directory to start the server.
                 </p>
               </div>
             ) : data ? (
               <div>
                 <p className="text-gray-600 mb-4">{data.message}</p>
-                <p className="text-sm text-gray-500 mb-4">Last updated: {new Date(data.timestamp).toLocaleString()}</p>
+                <p className="text-sm text-gray-500 mb-4">
+                  Last updated: {new Date(data.timestamp).toLocaleString()}
+                </p>
                 <div className="grid gap-4">
                   {data.data.map((item) => (
                     <div key={item.id} className="p-4 bg-gray-50 rounded-lg">
@@ -124,9 +121,7 @@ export default function Index() {
               </div>
               <div>
                 <h3 className="font-semibold">Or run everything with Turbo:</h3>
-                <code className="block bg-gray-100 p-2 rounded mt-1">
-                  npm run dev
-                </code>
+                <code className="block bg-gray-100 p-2 rounded mt-1">npm run dev</code>
               </div>
             </div>
           </Card>

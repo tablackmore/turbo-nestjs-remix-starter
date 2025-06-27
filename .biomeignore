@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+.next/
+.turbo/
+
+# Coverage reports
+coverage/
+
+# Configuration files
+*.config.js
+*.config.mjs
+*.config.ts
+.eslintrc.cjs
+
+# API build output
+apps/api/dist/
+
+# Web build output
+apps/web/build/
+
+# Turbo cache
+.turbo/
+
+# Others
+*.log
+.env
+.env.local
