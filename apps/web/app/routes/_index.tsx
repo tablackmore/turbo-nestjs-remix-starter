@@ -1,7 +1,7 @@
-import type { MetaFunction } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
 import { Button } from '@repo/ui/button';
 import { Card } from '@repo/ui/card';
+import type { MetaFunction } from 'react-router';
+import { useLoaderData } from 'react-router';
 
 export const meta: MetaFunction = () => {
   return [

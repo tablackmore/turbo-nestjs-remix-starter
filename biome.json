@@ -71,7 +71,7 @@
       }
     },
     {
-      "includes": ["**/dist/**/*", "**/build/**/*", "**/.turbo/**/*"],
+      "includes": ["**/dist/**/*", "**/build/**/*", "**/.turbo/**/*", "**/.react-router/**/*"],
       "linter": {
         "enabled": false
       },
