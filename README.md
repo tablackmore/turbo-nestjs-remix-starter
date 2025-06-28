@@ -1,24 +1,35 @@
-# Turbo Monorepo: NestJS + Remix + UI Library
+# Turbo Monorepo: NestJS + React Router + UI Library
 
-This is a Turbo monorepo containing:
+A modern full-stack monorepo starter built with the latest technologies:
 
-- **NestJS API** (`apps/api`) - Backend API server
-- **Remix Web App** (`apps/web`) - Frontend web application
+- **NestJS API** (`apps/api`) - Backend API server with TypeScript
+- **React Router v7 Web App** (`apps/web`) - Frontend web application with React 19
 - **Shared UI Library** (`packages/ui`) - Reusable React components
-- **ESLint Config** (`packages/eslint-config`) - Shared ESLint configuration
 - **TypeScript Config** (`packages/typescript-config`) - Shared TypeScript configuration
+
+## ✨ Features
+
+- 🚀 **React Router v7** - Latest routing with server-side rendering
+- ⚛️ **React 19** - Latest React with improved performance
+- 🎯 **NestJS** - Scalable Node.js framework for APIs
+- 🔧 **Turborepo** - High-performance build system
+- 🎨 **Tailwind CSS** - Utility-first CSS framework
+- 📏 **Biome** - Fast formatter and linter
+- 🛠️ **Chrome DevTools Workspace** - Save changes directly from DevTools
+- 📦 **TypeScript** - End-to-end type safety
+- ⚡ **Vite** - Lightning-fast build tool
 
 ## Architecture
 
 ```
 mono-site/
 ├── apps/
-│   ├── api/          # NestJS backend API
-│   └── web/          # Remix frontend app
+│   ├── api/          # NestJS backend API (port 3001)
+│   └── web/          # React Router v7 frontend (port 5173)
 ├── packages/
 │   ├── ui/           # Shared React components
-│   ├── eslint-config/# Shared ESLint configuration
 │   └── typescript-config/ # Shared TypeScript configuration
+├── biome.json        # Biome configuration
 └── turbo.json        # Turbo configuration
 ```
 
@@ -43,21 +54,23 @@ npm install
 npm run dev
 ```
 
+This starts:
+- **API Server**: `http://localhost:3001`
+- **Web Application**: `http://localhost:5173`
+
 #### Run individual applications
 
 **API Server (NestJS):**
 ```bash
 cd apps/api
-npm run start:dev
+npm run dev
 ```
 
-**Web Application (Remix):**
+**Web Application (React Router v7):**
 ```bash
 cd apps/web
 npm run dev
 ```
-
-The API server runs on `http://localhost:3001` and the web application runs on `http://localhost:5173`.
 
 ### Building
 
@@ -66,124 +79,171 @@ The API server runs on `http://localhost:3001` and the web application runs on `
 npm run build
 ```
 
-### Linting
+### Code Quality
 
 ```bash
-# Lint all packages and applications
+# Format and lint with Biome
 npm run lint
+
+# Type check all packages
+npm run check-types
 ```
 
-## Features
+## 🚀 **NestJS API** (`apps/api`)
 
-### 🚀 **NestJS API** (`apps/api`)
-- RESTful API endpoints
+Modern backend API with:
+- RESTful endpoints with TypeScript
 - CORS enabled for frontend consumption
-- TypeScript support
+- Hot reload development
 - Built-in testing with Jest
 
 **Available Endpoints:**
-- `GET /` - Health check
-- `GET /api/data` - Sample data endpoint
+- `GET /` - Health check endpoint
 
-### 🎨 **Remix Web App** (`apps/web`)
-- Server-side rendering
-- Uses shared UI components from `@repo/ui`
-- Consumes NestJS API
-- Tailwind CSS for styling
-- TypeScript support
+### Example API Usage
 
-### 📦 **Shared UI Library** (`packages/ui`)
-- Reusable React components
-- TypeScript definitions
-- Shared across all applications
+```typescript
+// Fetch data from API
+const response = await fetch('http://localhost:3001');
+const data = await response.json();
+```
 
-**Available Components:**
-- `Button` - Interactive button component
-- `Card` - Container component for content
-- `Code` - Code display component
+## 🎨 **React Router v7 Web App** (`apps/web`)
 
-### 🔧 **Turborepo Configuration**
+Modern frontend application featuring:
+- **React 19** - Latest React with improved performance
+- **Server-side rendering** - Fast initial page loads
+- **Shared UI components** - From `@repo/ui` package
+- **Tailwind CSS** - Utility-first styling
+- **Chrome DevTools Workspace** - Save changes directly from DevTools
+- **TypeScript** - Full type safety
 
-The monorepo uses Turborepo for:
-- **Build orchestration** - Builds packages in the correct order
-- **Caching** - Speeds up subsequent builds and tests
-- **Parallel execution** - Runs tasks across multiple packages simultaneously
+### Chrome DevTools Workspace Integration
 
-## Usage Examples
+This starter includes Chrome DevTools workspace integration:
 
-### Using UI Components in Remix
+1. Start the dev server (`npm run dev`)
+2. Open Chrome DevTools on `localhost:5173`
+3. Go to **Sources** → **Workspace** tab
+4. Click **"Connect"** next to your project folder
+5. Grant file access permission
+6. Edit CSS/JS in DevTools and save directly to source files!
+
+### Example Component Usage
 
 ```tsx
-import { Button } from "@repo/ui/button";
-import { Card } from "@repo/ui/card";
+import { Button } from '@repo/ui/button';
+import { Card } from '@repo/ui/card';
 
-export default function MyPage() {
+export default function HomePage() {
   return (
     <Card>
-      <h1>My Page</h1>
-      <Button appName="web">Click me!</Button>
+      <h1>Welcome to React Router v7</h1>
+      <Button appName="web">Get Started</Button>
     </Card>
   );
 }
 ```
 
-### Consuming API in Remix
+## 📦 **Shared UI Library** (`packages/ui`)
+
+Reusable React components built with:
+- **React 19** - Latest React features
+- **TypeScript** - Full type definitions
+- **Tailwind CSS** - Consistent styling
+
+**Available Components:**
+- `Button` - Interactive button with app name variants
+- `Card` - Container component for content sections
+- `Code` - Syntax-highlighted code display
+
+### Using UI Components
 
 ```tsx
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import { Button } from '@repo/ui/button';
+import { Card } from '@repo/ui/card';
+import { Code } from '@repo/ui/code';
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const response = await fetch('http://localhost:3001/api/data');
-  const data = await response.json();
-  return { data };
+export default function ExamplePage() {
+  return (
+    <Card>
+      <h2>Example Components</h2>
+      <Button appName="web">Click me!</Button>
+      <Code children="console.log('Hello, World!');" />
+    </Card>
+  );
 }
 ```
 
-## Scripts
+## 🔧 **Turborepo Configuration**
+
+Optimized for development speed:
+- **Dependency-aware builds** - Packages build in correct order
+- **Intelligent caching** - Skip unchanged builds
+- **Parallel execution** - Maximum CPU utilization
+- **Remote caching** - Share cache across team (configurable)
+
+## Scripts Reference
 
 ### Root Level Scripts
-- `npm run dev` - Start all applications in development mode
+- `npm run dev` - Start all apps in development mode
 - `npm run build` - Build all packages and applications  
-- `npm run lint` - Lint all packages and applications
-- `npm run format` - Format code with Prettier
-- `npm run check-types` - Type check all TypeScript code
+- `npm run lint` - Format and lint with Biome
+- `npm run check-types` - Type check all TypeScript
 
-### Application Scripts
-
-**API (`apps/api`):**
-- `npm run start:dev` - Start in development mode with hot reload
-- `npm run build` - Build the application
-- `npm run start:prod` - Start in production mode
-- `npm run test` - Run tests
-
-**Web (`apps/web`):**
-- `npm run dev` - Start development server
+### API Scripts (`apps/api`)
+- `npm run dev` - Development with hot reload
 - `npm run build` - Build for production
 - `npm run start` - Start production server
-- `npm run typecheck` - Type check the application
+- `npm run test` - Run test suite
+
+### Web Scripts (`apps/web`)
+- `npm run dev` - Development server (Vite)
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run typecheck` - Type check only
+
+## Technology Stack
+
+| Category | Technology |
+|----------|------------|
+| **Frontend** | React 19, React Router v7, Tailwind CSS |
+| **Backend** | NestJS, Node.js, TypeScript |
+| **Build Tools** | Turborepo, Vite, TypeScript |
+| **Code Quality** | Biome (formatting + linting), TypeScript |
+| **Development** | Chrome DevTools Workspace integration |
 
 ## Adding New Packages
 
-To add a new package to the monorepo:
+To add a new package:
 
-1. Create a new directory in `packages/` or `apps/`
-2. Add the package name to the workspace in `package.json`
-3. Create a `package.json` file in the new package
-4. Update `turbo.json` if needed for new build tasks
+1. Create directory in `packages/` or `apps/`
+2. Add package name to workspace in root `package.json`
+3. Create `package.json` in new package
+4. Update `turbo.json` for new build tasks (if needed)
+
+Example new package structure:
+```
+packages/my-package/
+├── package.json
+├── src/
+│   └── index.ts
+└── tsconfig.json
+```
 
 ## Deployment
 
 ### API Deployment
-The NestJS API can be deployed to any Node.js hosting service:
+Deploy to any Node.js hosting service:
 
 ```bash
 cd apps/api
 npm run build
-npm run start:prod
+npm run start
 ```
 
 ### Web Deployment
-The Remix app can be deployed to services that support Node.js:
+Deploy to services supporting Node.js SSR:
 
 ```bash
 cd apps/web  
@@ -191,14 +251,39 @@ npm run build
 npm run start
 ```
 
+Popular deployment platforms:
+- **Vercel** - Zero-config React Router v7 support
+- **Netlify** - Full-stack applications
+- **Railway** - Simple Node.js deployment
+- **Fly.io** - Global application deployment
+
+## Development Tips
+
+### Hot Reload
+- API: Changes trigger automatic restart
+- Web: Instant HMR with Vite
+- UI Components: Hot reload across all consuming apps
+
+### Type Safety
+- Shared types between API and frontend
+- Full IntelliSense support
+- Catch errors at compile time
+
+### Chrome DevTools Integration
+- Edit styles in DevTools → Save to source files
+- Debug with breakpoints in actual TypeScript
+- Automatic source map support
+
 ## Contributing
 
 1. Fork the repository
-2. Create a feature branch
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes
-4. Run `npm run lint` and `npm run build` to ensure everything works
-5. Submit a pull request
+4. Run quality checks: `npm run lint && npm run check-types && npm run build`
+5. Commit changes (`git commit -m 'Add amazing feature'`)
+6. Push to branch (`git push origin feature/amazing-feature`)
+7. Submit a pull request
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
