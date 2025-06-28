@@ -51,7 +51,7 @@ Before submitting your PR, run:
 
 ```bash
 # Format and lint code
-npm run lint
+npm run check
 
 # Type check
 npm run check-types
