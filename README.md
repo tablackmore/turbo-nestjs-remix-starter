@@ -56,6 +56,7 @@ npm run dev
 
 This starts:
 - **API Server**: `http://localhost:3001`
+- **API Documentation**: `http://localhost:3001/api/docs`
 - **Web Application**: `http://localhost:5173`
 
 #### Run individual applications
@@ -93,19 +94,37 @@ npm run check-types
 
 Modern backend API with:
 - RESTful endpoints with TypeScript
+- **OpenAPI/Swagger documentation** - Interactive API docs
 - CORS enabled for frontend consumption
 - Hot reload development
 - Built-in testing with Jest
 
 **Available Endpoints:**
 - `GET /` - Health check endpoint
+- `GET /api/data` - Sample data for frontend demonstration
+
+### 📚 API Documentation
+
+Interactive API documentation is available at:
+**http://localhost:3001/api/docs**
+
+The documentation includes:
+- Complete endpoint specifications
+- Request/response schemas
+- Interactive testing interface
+- TypeScript type definitions
+- Example requests and responses
 
 ### Example API Usage
 
 ```typescript
 // Fetch data from API
-const response = await fetch('http://localhost:3001');
+const response = await fetch('http://localhost:3001/api/data');
 const data = await response.json();
+
+// Health check
+const healthResponse = await fetch('http://localhost:3001');
+const status = await healthResponse.json();
 ```
 
 ## 🎨 **React Router v7 Web App** (`apps/web`)
