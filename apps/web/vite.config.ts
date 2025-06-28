@@ -33,13 +33,15 @@ export default defineConfig({
         );
       },
     },
-    
+
     // Option 2: Official plugin (uncomment to use instead)
     // devtoolsJson({
     //   uuid: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' // Optional: specify UUID
     // }),
-    
+
     reactRouter(),
     tsconfigPaths(),
+    // TODO: Fix type assertion - using 'as any' due to conflicting Vite plugin type definitions
+    // between different plugin versions. This is a temporary workaround.
   ] as any,
 });
