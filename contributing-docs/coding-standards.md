@@ -27,7 +27,7 @@ This document outlines the coding standards and best practices for contributing 
 ### Formatting and Linting
 
 - Use **Biome** for code formatting and linting
-- Run `npm run lint` before committing
+- Run `npm run check` before committing
 - All code must pass type checking: `npm run check-types`
 - Follow the configured Biome rules (see `biome.json`)
 
