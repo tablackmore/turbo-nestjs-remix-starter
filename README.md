@@ -276,13 +276,21 @@ Popular deployment platforms:
 
 ## Contributing
 
+We welcome contributions! Please read our contribution guidelines:
+
+- **[Contributing Guide](./contributing-docs/CONTRIBUTING.md)** - Quick start and workflow
+- **[Coding Standards](./contributing-docs/coding-standards.md)** - Detailed coding guidelines
+- **[Commit Message Guidelines](./contributing-docs/commit-message-guidelines.md)** - Structured commit format
+
+### Quick Start
+
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
+3. Follow our [coding standards](./contributing-docs/coding-standards.md)
 4. Run quality checks: `npm run lint && npm run check-types && npm run build`
-5. Commit changes (`git commit -m 'Add amazing feature'`)
-6. Push to branch (`git push origin feature/amazing-feature`)
-7. Submit a pull request
+5. Submit a pull request
+
+For detailed guidelines, see our [Contributing Guide](./contributing-docs/CONTRIBUTING.md).
 
 ## License
 
