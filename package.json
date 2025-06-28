@@ -11,11 +11,6 @@
     "check:fix": "biome check --write .",
     "check-types": "turbo run check-types"
   },
-  "devDependencies": {
-    "@biomejs/biome": "^2.0.6",
-    "turbo": "^2.5.4",
-    "typescript": "5.8.2"
-  },
   "engines": {
     "node": ">=18"
   },
@@ -31,5 +26,10 @@
   "dependencies": {
     "@react-router/fs-routes": "^7.6.3",
     "@react-router/node": "^7.6.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.0.6",
+    "turbo": "^2.5.4",
+    "typescript": "5.8.2"
   }
 }
