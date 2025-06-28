@@ -6,7 +6,8 @@ import { useLoaderData } from 'react-router';
 export const meta: MetaFunction = () => {
   return [
     { title: 'Turbo Monorepo Demo' },
-    { name: 'description', content: 'Remix + NestJS + UI Library Demo' },
+    { name: 'description', content: 'React Router v7 + NestJS + UI Library Demo' },
+    { name: 'viewport', content: 'width=device-width, initial-scale=1' },
   ];
 };
 
@@ -20,20 +21,48 @@ interface ApiData {
   timestamp: string;
 }
 
-export async function loader() {
+interface LoaderData {
+  data: ApiData | null;
+  error: string | null;
+}
+
+export async function loader(): Promise<LoaderData> {
   try {
     const response = await fetch('http://localhost:3001/api/data');
     if (!response.ok) {
-      throw new Error('Failed to fetch data from API');
+      throw new Error(`API responded with status: ${response.status}`);
     }
     const data: ApiData = await response.json();
     return { data, error: null };
-  } catch (_error) {
+  } catch (error) {
+    console.error('Failed to fetch API data:', error);
     return {
       data: null,
       error: 'Unable to connect to API. Make sure the NestJS server is running on port 3001.',
     };
   }
+}
+
+export function ErrorBoundary() {
+  return (
+    <div className='min-h-screen bg-gray-50 py-12 px-4'>
+      <div className='max-w-4xl mx-auto'>
+        <Card variant='elevated'>
+          <h1 className='text-2xl font-bold text-red-600 mb-4'>Something went wrong</h1>
+          <p className='text-gray-600 mb-4'>
+            An unexpected error occurred while loading this page.
+          </p>
+          <Button
+            onClick={() => window.location.reload()}
+            variant='primary'
+            aria-label='Reload the page'
+          >
+            Reload Page
+          </Button>
+        </Card>
+      </div>
+    </div>
+  );
 }
 
 export default function Index() {
@@ -44,58 +73,75 @@ export default function Index() {
       <div className='max-w-4xl mx-auto'>
         <header className='text-center mb-12'>
           <h1 className='text-4xl font-bold text-gray-900 mb-4'>Turbo Monorepo Demo</h1>
-          <p className='text-xl text-gray-600 mb-8'>Remix + NestJS + Shared UI Components</p>
+          <p className='text-xl text-gray-600 mb-8'>
+            React Router v7 + NestJS + Shared UI Components
+          </p>
           <div className='flex gap-4 justify-center'>
-            <Button appName='web'>Primary Button</Button>
-            <Button appName='remix'>Secondary Button</Button>
+            <Button appName='web' variant='primary' size='md'>
+              Primary Button
+            </Button>
+            <Button appName='remix' variant='secondary' size='md'>
+              Secondary Button
+            </Button>
           </div>
         </header>
 
         <div className='grid gap-6'>
-          <Card>
+          <Card variant='default'>
             <h2 className='text-2xl font-semibold mb-4'>Architecture Overview</h2>
             <div className='grid md:grid-cols-3 gap-4'>
               <div className='p-4 bg-blue-50 rounded-lg'>
-                <h3 className='font-semibold text-blue-900'>Remix Frontend</h3>
+                <h3 className='font-semibold text-blue-900'>React Router v7</h3>
                 <p className='text-blue-700 text-sm'>
-                  This page is built with Remix and uses shared UI components
+                  Modern React framework with file-based routing and type-safe loaders
                 </p>
               </div>
               <div className='p-4 bg-green-50 rounded-lg'>
                 <h3 className='font-semibold text-green-900'>NestJS API</h3>
-                <p className='text-green-700 text-sm'>Backend API providing data to the frontend</p>
+                <p className='text-green-700 text-sm'>
+                  Scalable Node.js backend with TypeScript and OpenAPI documentation
+                </p>
               </div>
               <div className='p-4 bg-purple-50 rounded-lg'>
                 <h3 className='font-semibold text-purple-900'>Shared UI</h3>
                 <p className='text-purple-700 text-sm'>
-                  Reusable React components used across applications
+                  Type-safe React components with Tailwind CSS and accessibility features
                 </p>
               </div>
             </div>
           </Card>
 
-          <Card>
+          <Card variant='default'>
             <h2 className='text-2xl font-semibold mb-4'>API Data</h2>
             {error ? (
               <div className='p-4 bg-red-50 border border-red-200 rounded-lg'>
-                <p className='text-red-700'>{error}</p>
-                <p className='text-sm text-red-600 mt-2'>
-                  Run <code className='bg-red-100 px-2 py-1 rounded'>npm run start:dev</code> in the
-                  API directory to start the server.
-                </p>
+                <p className='text-red-700 font-medium mb-2'>API Connection Error</p>
+                <p className='text-red-600 text-sm mb-3'>{error}</p>
+                <div className='space-y-2'>
+                  <p className='text-sm text-red-600'>
+                    <strong>To start the API server:</strong>
+                  </p>
+                  <code className='block bg-red-100 px-3 py-2 rounded text-sm font-mono'>
+                    npm run dev
+                  </code>
+                  <p className='text-xs text-red-500 mt-2'>
+                    This will start both the API server (port 3001) and web server (port 5173)
+                  </p>
+                </div>
               </div>
             ) : data ? (
               <div>
                 <p className='text-gray-600 mb-4'>{data.message}</p>
                 <p className='text-sm text-gray-500 mb-4'>
-                  Last updated: {new Date(data.timestamp).toLocaleString('en-US', {
+                  Last updated:{' '}
+                  {new Date(data.timestamp).toLocaleString('en-US', {
                     year: 'numeric',
                     month: '2-digit',
                     day: '2-digit',
                     hour: '2-digit',
                     minute: '2-digit',
                     second: '2-digit',
-                    hour12: true
+                    hour12: true,
                   })}
                 </p>
                 <div className='grid gap-4'>
@@ -108,28 +154,44 @@ export default function Index() {
                 </div>
               </div>
             ) : (
-              <p>Loading...</p>
+              <div className='flex items-center justify-center py-8'>
+                <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600'></div>
+                <span className='ml-3 text-gray-600'>Loading API data...</span>
+              </div>
             )}
           </Card>
 
-          <Card>
+          <Card variant='default'>
             <h2 className='text-2xl font-semibold mb-4'>Getting Started</h2>
             <div className='space-y-4'>
               <div>
-                <h3 className='font-semibold'>1. Start the API server:</h3>
-                <code className='block bg-gray-100 p-2 rounded mt-1'>
-                  cd apps/api && npm run start:dev
+                <h3 className='font-semibold mb-2'>1. Development Setup:</h3>
+                <code className='block bg-gray-100 p-3 rounded text-sm font-mono'>
+                  npm install && npm run dev
                 </code>
+                <p className='text-sm text-gray-600 mt-1'>
+                  Installs dependencies and starts all services with Turbo
+                </p>
               </div>
               <div>
-                <h3 className='font-semibold'>2. Start the web server:</h3>
-                <code className='block bg-gray-100 p-2 rounded mt-1'>
-                  cd apps/web && npm run dev
-                </code>
+                <h3 className='font-semibold mb-2'>2. Individual Services:</h3>
+                <div className='space-y-2'>
+                  <code className='block bg-gray-100 p-2 rounded text-sm font-mono'>
+                    npm run dev:api # NestJS API (port 3001)
+                  </code>
+                  <code className='block bg-gray-100 p-2 rounded text-sm font-mono'>
+                    npm run dev:web # React Router v7 (port 5173)
+                  </code>
+                </div>
               </div>
               <div>
-                <h3 className='font-semibold'>Or run everything with Turbo:</h3>
-                <code className='block bg-gray-100 p-2 rounded mt-1'>npm run dev</code>
+                <h3 className='font-semibold mb-2'>3. Quality Checks:</h3>
+                <code className='block bg-gray-100 p-2 rounded text-sm font-mono'>
+                  npm run check # Linting & formatting
+                </code>
+                <code className='block bg-gray-100 p-2 rounded text-sm font-mono'>
+                  npm run check-types # TypeScript validation
+                </code>
               </div>
             </div>
           </Card>
