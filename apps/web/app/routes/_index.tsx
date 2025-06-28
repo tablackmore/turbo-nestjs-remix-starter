@@ -88,7 +88,15 @@ export default function Index() {
               <div>
                 <p className='text-gray-600 mb-4'>{data.message}</p>
                 <p className='text-sm text-gray-500 mb-4'>
-                  Last updated: {new Date(data.timestamp).toLocaleString()}
+                  Last updated: {new Date(data.timestamp).toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                  })}
                 </p>
                 <div className='grid gap-4'>
                   {data.data.map((item) => (
