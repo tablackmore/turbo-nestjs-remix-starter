@@ -12,13 +12,20 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
+  ApiErrorResponseDto,
   ApiResponseDto,
   PaginatedApiResponseDto,
   PaginationLinksDto,
   PaginationMetaDto,
 } from '../../common/dto/api-response.dto';
 import { PaginationQueryDto } from '../../common/dto/pagination.dto';
-import { CreateItemDto, ItemDto, UpdateItemDto } from './dto/item.dto';
+import {
+  CreateItemDto,
+  ItemDto,
+  ItemResponseDto,
+  ItemsListResponseDto,
+  UpdateItemDto,
+} from './dto/item.dto';
 import { ItemsService } from './items.service';
 
 @ApiTags('items')
@@ -31,7 +38,12 @@ export class ItemsController {
   @ApiResponse({
     status: 201,
     description: 'Item created successfully',
-    type: ItemDto,
+    type: ItemResponseDto,
+  })
+  @ApiResponse({
+    status: 422,
+    description: 'Validation error',
+    type: ApiErrorResponseDto,
   })
   @HttpCode(HttpStatus.CREATED)
   create(@Body() createItemDto: CreateItemDto): ApiResponseDto<ItemDto> {
@@ -54,7 +66,7 @@ export class ItemsController {
   @ApiResponse({
     status: 200,
     description: 'Items retrieved successfully',
-    type: [ItemDto],
+    type: ItemsListResponseDto,
   })
   findAll(@Query() query: PaginationQueryDto): PaginatedApiResponseDto<ItemDto> {
     const { items, total } = this.itemsService.findAll(query);
@@ -110,11 +122,12 @@ export class ItemsController {
   @ApiResponse({
     status: 200,
     description: 'Item retrieved successfully',
-    type: ItemDto,
+    type: ItemResponseDto,
   })
   @ApiResponse({
     status: 404,
     description: 'Item not found',
+    type: ApiErrorResponseDto,
   })
   findOne(@Param('id') id: string): ApiResponseDto<ItemDto> {
     const item = this.itemsService.findOne(id);
@@ -134,11 +147,17 @@ export class ItemsController {
   @ApiResponse({
     status: 200,
     description: 'Item updated successfully',
-    type: ItemDto,
+    type: ItemResponseDto,
   })
   @ApiResponse({
     status: 404,
     description: 'Item not found',
+    type: ApiErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 422,
+    description: 'Validation error',
+    type: ApiErrorResponseDto,
   })
   update(@Param('id') id: string, @Body() updateItemDto: UpdateItemDto): ApiResponseDto<ItemDto> {
     // Extract data from the DTO structure
@@ -164,6 +183,7 @@ export class ItemsController {
   @ApiResponse({
     status: 404,
     description: 'Item not found',
+    type: ApiErrorResponseDto,
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string): void {

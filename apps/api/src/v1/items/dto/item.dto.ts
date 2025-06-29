@@ -27,6 +27,98 @@ export class ItemDto {
   attributes: ItemAttributesDto;
 }
 
+// Specific response DTOs for Swagger documentation
+export class ItemMetaDto {
+  @ApiProperty()
+  timestamp: string;
+
+  @ApiProperty()
+  version: string;
+
+  @ApiProperty({ required: false })
+  requestId?: string;
+}
+
+export class PaginationMetaDto {
+  @ApiProperty()
+  page: number;
+
+  @ApiProperty()
+  limit: number;
+
+  @ApiProperty()
+  total: number;
+
+  @ApiProperty()
+  totalPages: number;
+
+  @ApiProperty()
+  hasNext: boolean;
+
+  @ApiProperty()
+  hasPrev: boolean;
+}
+
+export class PaginationLinksDto {
+  @ApiProperty()
+  self: string;
+
+  @ApiProperty()
+  first: string;
+
+  @ApiProperty()
+  last: string;
+
+  @ApiProperty({ nullable: true })
+  next: string | null;
+
+  @ApiProperty({ nullable: true })
+  prev: string | null;
+}
+
+export class ItemResponseDto {
+  @ApiProperty({ default: true })
+  success: boolean;
+
+  @ApiProperty({ type: ItemDto })
+  data: ItemDto;
+
+  @ApiProperty({ type: ItemMetaDto })
+  meta: ItemMetaDto;
+}
+
+export class ItemsListResponseDto {
+  @ApiProperty({ default: true })
+  success: boolean;
+
+  @ApiProperty({ type: [ItemDto] })
+  data: ItemDto[];
+
+  @ApiProperty({
+    type: 'object',
+    properties: {
+      timestamp: { type: 'string' },
+      version: { type: 'string' },
+      requestId: { type: 'string' },
+      pagination: {
+        type: 'object',
+        properties: {
+          page: { type: 'number' },
+          limit: { type: 'number' },
+          total: { type: 'number' },
+          totalPages: { type: 'number' },
+          hasNext: { type: 'boolean' },
+          hasPrev: { type: 'boolean' },
+        },
+      },
+    },
+  })
+  meta: ItemMetaDto & { pagination: PaginationMetaDto };
+
+  @ApiProperty({ type: PaginationLinksDto })
+  links: PaginationLinksDto;
+}
+
 export class CreateItemAttributesDto {
   @ApiProperty({ description: 'Item name', minLength: 1 })
   @IsString()
