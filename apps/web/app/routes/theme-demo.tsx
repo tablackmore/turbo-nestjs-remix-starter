@@ -1,6 +1,7 @@
 import { Button } from '@repo/ui/button';
 import { Card } from '@repo/ui/card';
 import type { MetaFunction } from 'react-router';
+import { Link } from 'react-router';
 
 export const meta: MetaFunction = () => {
   return [
@@ -13,6 +14,21 @@ export default function ThemeDemo() {
   return (
     <div className='min-h-screen bg-background p-8'>
       <div className='max-w-7xl mx-auto space-y-12'>
+        {/* Navigation */}
+        <div className='flex justify-between items-center'>
+          <Link to='/' className='text-blue-600 hover:text-blue-800 underline'>
+            ← Back to Items Demo
+          </Link>
+          <a
+            href='http://localhost:3001/api-docs'
+            target='_blank'
+            rel='noopener noreferrer'
+            className='text-blue-600 hover:text-blue-800 underline'
+          >
+            📚 API Documentation
+          </a>
+        </div>
+
         {/* Header */}
         <div className='text-center space-y-4'>
           <h1 className='text-4xl font-display font-bold text-foreground'>Clean Theme System</h1>
