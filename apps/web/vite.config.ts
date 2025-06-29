@@ -41,7 +41,7 @@ export default defineConfig({
 
     reactRouter(),
     tsconfigPaths(),
-    // TODO: Fix type assertion - using 'as any' due to conflicting Vite plugin type definitions
-    // between different plugin versions. This is a temporary workaround.
+    // Biome override disabled for this line - type conflict between Vite plugin versions
+    // biome-ignore lint/suspicious/noExplicitAny: legitimate plugin type conflict
   ] as any,
 });

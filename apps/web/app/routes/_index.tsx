@@ -1,7 +1,7 @@
 import { Button } from '@repo/ui/button';
 import { Card } from '@repo/ui/card';
 import type { MetaFunction } from 'react-router';
-import { useLoaderData } from 'react-router';
+import { Link, useLoaderData } from 'react-router';
 
 export const meta: MetaFunction = () => {
   return [
@@ -47,7 +47,7 @@ export function ErrorBoundary() {
   return (
     <div className='min-h-screen bg-gray-50 py-12 px-4'>
       <div className='max-w-4xl mx-auto'>
-        <Card variant='elevated'>
+        <Card variant='default'>
           <h1 className='text-2xl font-bold text-red-600 mb-4'>Something went wrong</h1>
           <p className='text-gray-600 mb-4'>
             An unexpected error occurred while loading this page.
@@ -74,7 +74,7 @@ export default function Index() {
         <header className='text-center mb-12'>
           <h1 className='text-4xl font-bold text-gray-900 mb-4'>Turbo Monorepo Demo</h1>
           <p className='text-xl text-gray-600 mb-8'>
-            React Router v7 + NestJS + Shared UI Components
+            React Router v7 + NestJS + Shared UI Components + Clean Theme System
           </p>
           <div className='flex gap-4 justify-center'>
             <Button appName='web' variant='primary' size='md'>
@@ -105,7 +105,7 @@ export default function Index() {
               <div className='p-4 bg-purple-50 rounded-lg'>
                 <h3 className='font-semibold text-purple-900'>Shared UI</h3>
                 <p className='text-purple-700 text-sm'>
-                  Type-safe React components with Tailwind CSS and accessibility features
+                  Type-safe React components with clean theme system and accessibility features
                 </p>
               </div>
             </div>
@@ -192,6 +192,46 @@ export default function Index() {
                 <code className='block bg-gray-100 p-2 rounded text-sm font-mono'>
                   npm run check-types # TypeScript validation
                 </code>
+              </div>
+            </div>
+          </Card>
+
+          <Card variant='default'>
+            <h2 className='text-2xl font-semibold mb-4'>Clean Theme System</h2>
+            <div className='space-y-4'>
+              <p className='text-gray-600'>
+                Experience our clean CSS custom property theme that maps mood-based colors to
+                semantic components.
+              </p>
+              <div className='flex flex-wrap gap-3'>
+                <Link to='/theme-demo'>
+                  <Button variant='primary' size='md'>
+                    Explore Theme Demo
+                  </Button>
+                </Link>
+                <div className='flex gap-2 items-center'>
+                  <div className='w-8 h-8 rounded bg-primary'></div>
+                  <div className='w-8 h-8 rounded bg-secondary'></div>
+                  <div className='w-8 h-8 rounded bg-success'></div>
+                  <div className='w-8 h-8 rounded bg-destructive'></div>
+                  <span className='text-sm text-gray-500'>
+                    Semantic colors with mood-based values
+                  </span>
+                </div>
+              </div>
+              <div className='grid grid-cols-2 md:grid-cols-4 gap-2 text-xs'>
+                <div className='text-center p-2 bg-primary text-primary-foreground rounded'>
+                  Primary
+                </div>
+                <div className='text-center p-2 bg-secondary text-secondary-foreground rounded'>
+                  Secondary
+                </div>
+                <div className='text-center p-2 bg-success text-success-foreground rounded'>
+                  Success
+                </div>
+                <div className='text-center p-2 bg-destructive text-destructive-foreground rounded'>
+                  Destructive
+                </div>
               </div>
             </div>
           </Card>
