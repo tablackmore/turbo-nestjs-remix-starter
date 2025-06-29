@@ -5,7 +5,7 @@ export default {
     './app/**/{**,.client,.server}/**/*.{js,jsx,ts,tsx}',
     '../packages/ui/src/**/*.{ts,tsx}', // Include UI package
   ],
-  darkMode: ['class'],
+  darkMode: 'class',
   theme: {
     extend: {
       // Design system colors with CSS variables for theming
