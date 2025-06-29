@@ -14,7 +14,6 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   ApiErrorResponseDto,
   ApiResponseDto,
-  PaginatedApiResponseDto,
   PaginationLinksDto,
   PaginationMetaDto,
 } from '../../common/dto/api-response.dto';
@@ -68,7 +67,7 @@ export class ItemsController {
     description: 'Items retrieved successfully',
     type: ItemsListResponseDto,
   })
-  findAll(@Query() query: PaginationQueryDto): PaginatedApiResponseDto<ItemDto> {
+  findAll(@Query() query: PaginationQueryDto): ItemsListResponseDto {
     const { items, total } = this.itemsService.findAll(query);
 
     const page = query.page || 1;
