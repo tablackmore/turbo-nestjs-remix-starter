@@ -1,0 +1,51 @@
+{
+  "recommendations": [
+    // === Essential Formatting & Linting ===
+    "biomejs.biome",
+
+    // === TypeScript Support ===
+    "ms-vscode.vscode-typescript-next",
+
+    // === React & JSX Support ===
+    "ms-vscode.vscode-react-native",
+
+    // === Tailwind CSS ===
+    "bradlc.vscode-tailwindcss",
+
+    // === Git Integration ===
+    "mhutchie.git-graph",
+    "github.vscode-pull-request-github",
+
+    // === Productivity ===
+    "ms-vscode.vscode-json",
+    "redhat.vscode-yaml",
+    "ms-vscode.vscode-npm-script",
+
+    // === Additional Helpful Extensions ===
+    "usernamehw.errorlens",
+    "gruntfuggly.todo-tree",
+    "ms-vscode.vscode-markdown",
+    "yzhang.markdown-all-in-one",
+
+    // === Testing ===
+    "ms-vscode.vscode-jest",
+
+    // === Docker (if needed) ===
+    "ms-azuretools.vscode-docker",
+
+    // === Theme & Icons ===
+    "pkief.material-icon-theme",
+    "github.github-vscode-theme"
+  ],
+  "unwantedRecommendations": [
+    // === Conflicting Formatters ===
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+
+    // === Deprecated Extensions ===
+    "ms-vscode.vscode-typescript-tslint-plugin",
+
+    // === Conflicting Linters ===
+    "standard.vscode-standard"
+  ]
+}
