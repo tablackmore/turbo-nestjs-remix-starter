@@ -169,7 +169,10 @@ export default function HomePage() {
 Reusable React components built with:
 - **React 19** - Latest React features
 - **TypeScript** - Full type definitions
-- **Tailwind CSS** - Consistent styling
+- **Tailwind CSS** - Modern utility-first styling with design tokens
+- **tailwind-variants** - Type-safe component variants and theming
+
+**Design System:** See [Styling Guidelines](./contributing-docs/styling-guidelines.md) for comprehensive design system documentation.
 
 **Available Components:**
 - `Button` - Interactive button with app name variants

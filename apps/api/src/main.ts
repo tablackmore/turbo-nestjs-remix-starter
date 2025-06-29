@@ -12,7 +12,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('app', 'Application endpoints')
     .build();
-  
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document, {
     customSiteTitle: 'Monorepo API Documentation',
@@ -31,7 +31,7 @@ async function bootstrap() {
 
   const port = process.env.PORT ?? 3001;
   await app.listen(port);
-  
+
   console.log(`🚀 API Server running on: http://localhost:${port}`);
   console.log(`📚 API Documentation: http://localhost:${port}/api/docs`);
 }
