@@ -1,118 +1,203 @@
 import { Button } from '@repo/ui/button';
 import { Card } from '@repo/ui/card';
-import type { MetaFunction } from 'react-router';
-import { Link, useLoaderData } from 'react-router';
+import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from 'react-router';
+import { Form, Link, redirect, useActionData, useLoaderData, useNavigation } from 'react-router';
+import { ApiError, healthApi, itemsApi } from '~/lib/api';
+import type { CreateItemDto, ItemDto, PaginatedApiResponseDto } from '~/types/api';
 
 export const meta: MetaFunction = () => {
   return [
-    { title: 'Turbo Monorepo Demo' },
-    { name: 'description', content: 'React Router v7 + NestJS + UI Library Demo' },
+    { title: 'Items Management - Turbo Monorepo' },
+    { name: 'description', content: 'React Router v7 + NestJS Items API Demo' },
     { name: 'viewport', content: 'width=device-width, initial-scale=1' },
   ];
 };
 
-interface ApiData {
-  message: string;
-  data: Array<{
-    id: number;
-    name: string;
-    description: string;
-  }>;
-  timestamp: string;
-}
-
 interface LoaderData {
-  data: ApiData | null;
+  items: PaginatedApiResponseDto<ItemDto> | null;
+  health: { status: string; uptime: number } | null;
   error: string | null;
 }
 
-export async function loader(): Promise<LoaderData> {
+export async function loader({ request }: LoaderFunctionArgs): Promise<LoaderData> {
+  const url = new URL(request.url);
+  const page = Number(url.searchParams.get('page')) || 1;
+  const limit = Number(url.searchParams.get('limit')) || 10;
+  const sort =
+    (url.searchParams.get('sort') as 'id' | 'name' | 'createdAt' | 'updatedAt') || 'createdAt';
+  const order = (url.searchParams.get('order') as 'asc' | 'desc') || 'desc';
+
   try {
-    const response = await fetch('http://localhost:3001/api/data');
-    if (!response.ok) {
-      throw new Error(`API responded with status: ${response.status}`);
-    }
-    const data: ApiData = await response.json();
-    return { data, error: null };
-  } catch (error) {
-    console.error('Failed to fetch API data:', error);
+    const [itemsResponse, healthResponse] = await Promise.all([
+      itemsApi.getItems({ page, limit, sort, order }),
+      healthApi
+        .checkHealth()
+        .catch(() => null), // Don't fail if health check fails
+    ]);
+
     return {
-      data: null,
-      error: 'Unable to connect to API. Make sure the NestJS server is running on port 3001.',
+      items: itemsResponse,
+      health: healthResponse?.data || null,
+      error: null,
+    };
+  } catch (error) {
+    console.error('Failed to load data:', error);
+
+    let errorMessage =
+      'Unable to connect to API. Make sure the NestJS server is running on port 3001.';
+
+    if (error instanceof ApiError) {
+      errorMessage = `API Error: ${error.message} (${error.code})`;
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+
+    return {
+      items: null,
+      health: null,
+      error: errorMessage,
     };
   }
 }
 
-export function ErrorBoundary() {
-  return (
-    <div className='min-h-screen bg-gray-50 py-12 px-4'>
-      <div className='max-w-4xl mx-auto'>
-        <Card variant='default'>
-          <h1 className='text-2xl font-bold text-red-600 mb-4'>Something went wrong</h1>
-          <p className='text-gray-600 mb-4'>
-            An unexpected error occurred while loading this page.
-          </p>
-          <Button
-            onClick={() => window.location.reload()}
-            variant='primary'
-            aria-label='Reload the page'
-          >
-            Reload Page
-          </Button>
-        </Card>
-      </div>
-    </div>
-  );
+interface ActionData {
+  success?: boolean;
+  error?: string;
+}
+
+export async function action({ request }: ActionFunctionArgs): Promise<ActionData | Response> {
+  const formData = await request.formData();
+  const intent = formData.get('intent') as string;
+
+  try {
+    if (intent === 'create') {
+      const name = formData.get('name') as string;
+      const description = formData.get('description') as string;
+
+      if (!name?.trim()) {
+        return { success: false, error: 'Name is required' };
+      }
+
+      const createData: CreateItemDto = {
+        data: {
+          type: 'item',
+          attributes: {
+            name: name.trim(),
+            description: description?.trim() || '',
+          },
+        },
+      };
+
+      await itemsApi.createItem(createData);
+      return redirect('/?created=true');
+    }
+
+    if (intent === 'delete') {
+      const id = formData.get('id') as string;
+      if (!id) {
+        return { success: false, error: 'Item ID is required' };
+      }
+
+      await itemsApi.deleteItem(id);
+      return redirect('/?deleted=true');
+    }
+
+    return { success: false, error: 'Invalid action' };
+  } catch (error) {
+    console.error('Action error:', error);
+
+    if (error instanceof ApiError) {
+      return { success: false, error: `${error.message} (${error.code})` };
+    }
+
+    return { success: false, error: 'An unexpected error occurred' };
+  }
 }
 
 export default function Index() {
-  const { data, error } = useLoaderData<typeof loader>();
+  const { items, health, error } = useLoaderData<typeof loader>();
+  const actionData = useActionData<typeof action>();
+  const navigation = useNavigation();
+
+  const isSubmitting = navigation.state === 'submitting';
 
   return (
     <div className='min-h-screen bg-gray-50 py-12 px-4'>
       <div className='max-w-4xl mx-auto'>
         <header className='text-center mb-12'>
-          <h1 className='text-4xl font-bold text-gray-900 mb-4'>Turbo Monorepo Demo</h1>
+          <h1 className='text-4xl font-bold text-gray-900 mb-4'>Items Management</h1>
           <p className='text-xl text-gray-600 mb-8'>
-            React Router v7 + NestJS + Shared UI Components + Clean Theme System
+            React Router v7 + NestJS API with Pagination & CRUD Operations
           </p>
-          <div className='flex gap-4 justify-center'>
-            <Button appName='web' variant='primary' size='md'>
-              Primary Button
-            </Button>
-            <Button appName='remix' variant='secondary' size='md'>
-              Secondary Button
-            </Button>
-          </div>
+
+          {health && (
+            <div className='inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm'>
+              <div className='w-2 h-2 bg-green-500 rounded-full'></div>
+              API Healthy (Uptime: {Math.floor(health.uptime / 60)}m)
+            </div>
+          )}
         </header>
 
         <div className='grid gap-6'>
+          {/* Create Item Form */}
           <Card variant='default'>
-            <h2 className='text-2xl font-semibold mb-4'>Architecture Overview</h2>
-            <div className='grid md:grid-cols-3 gap-4'>
-              <div className='p-4 bg-blue-50 rounded-lg'>
-                <h3 className='font-semibold text-blue-900'>React Router v7</h3>
-                <p className='text-blue-700 text-sm'>
-                  Modern React framework with file-based routing and type-safe loaders
-                </p>
+            <h2 className='text-2xl font-semibold mb-4'>Create New Item</h2>
+            <Form method='post' className='space-y-4'>
+              <input type='hidden' name='intent' value='create' />
+
+              <div>
+                <label htmlFor='name' className='block text-sm font-medium text-gray-700 mb-1'>
+                  Name
+                </label>
+                <input
+                  id='name'
+                  name='name'
+                  type='text'
+                  required
+                  className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                  placeholder='Enter item name'
+                />
               </div>
-              <div className='p-4 bg-green-50 rounded-lg'>
-                <h3 className='font-semibold text-green-900'>NestJS API</h3>
-                <p className='text-green-700 text-sm'>
-                  Scalable Node.js backend with TypeScript and OpenAPI documentation
-                </p>
+
+              <div>
+                <label
+                  htmlFor='description'
+                  className='block text-sm font-medium text-gray-700 mb-1'
+                >
+                  Description
+                </label>
+                <textarea
+                  id='description'
+                  name='description'
+                  rows={3}
+                  className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                  placeholder='Enter item description (optional)'
+                />
               </div>
-              <div className='p-4 bg-purple-50 rounded-lg'>
-                <h3 className='font-semibold text-purple-900'>Shared UI</h3>
-                <p className='text-purple-700 text-sm'>
-                  Type-safe React components with clean theme system and accessibility features
-                </p>
-              </div>
-            </div>
+
+              <Button type='submit' disabled={isSubmitting} variant='primary' className='w-full'>
+                {isSubmitting ? 'Creating...' : 'Create Item'}
+              </Button>
+
+              {actionData?.error && (
+                <div className='p-3 bg-red-50 border border-red-200 rounded-md'>
+                  <p className='text-red-700 text-sm'>{actionData.error}</p>
+                </div>
+              )}
+            </Form>
           </Card>
 
+          {/* Items List */}
           <Card variant='default'>
-            <h2 className='text-2xl font-semibold mb-4'>API Data</h2>
+            <div className='flex justify-between items-center mb-4'>
+              <h2 className='text-2xl font-semibold'>Items</h2>
+              {items?.meta.pagination && (
+                <div className='text-sm text-gray-600'>
+                  Showing {items.data.length} of {items.meta.pagination.total} items
+                </div>
+              )}
+            </div>
+
             {error ? (
               <div className='p-4 bg-red-50 border border-red-200 rounded-lg'>
                 <p className='text-red-700 font-medium mb-2'>API Connection Error</p>
@@ -124,115 +209,135 @@ export default function Index() {
                   <code className='block bg-red-100 px-3 py-2 rounded text-sm font-mono'>
                     npm run dev
                   </code>
-                  <p className='text-xs text-red-500 mt-2'>
-                    This will start both the API server (port 3001) and web server (port 5173)
-                  </p>
                 </div>
               </div>
-            ) : data ? (
+            ) : items ? (
               <div>
-                <p className='text-gray-600 mb-4'>{data.message}</p>
-                <p className='text-sm text-gray-500 mb-4'>
-                  Last updated:{' '}
-                  {new Date(data.timestamp).toLocaleString('en-US', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    hour12: true,
-                  })}
-                </p>
-                <div className='grid gap-4'>
-                  {data.data.map((item) => (
-                    <div key={item.id} className='p-4 bg-gray-50 rounded-lg'>
-                      <h3 className='font-semibold'>{item.name}</h3>
-                      <p className='text-gray-600'>{item.description}</p>
-                    </div>
-                  ))}
-                </div>
+                {items.data.length === 0 ? (
+                  <div className='text-center py-8 text-gray-500'>
+                    <p>No items found. Create your first item above!</p>
+                  </div>
+                ) : (
+                  <div className='space-y-4'>
+                    {items.data.map((item) => (
+                      <div
+                        key={item.id}
+                        className='p-4 bg-gray-50 rounded-lg flex justify-between items-start'
+                      >
+                        <div className='flex-1'>
+                          <h3 className='font-semibold text-lg'>{item.attributes.name}</h3>
+                          <p className='text-gray-600 mt-1'>{item.attributes.description}</p>
+                          <div className='flex gap-4 mt-2 text-xs text-gray-500'>
+                            <span>
+                              Created: {new Date(item.attributes.createdAt).toLocaleDateString()}
+                            </span>
+                            <span>
+                              Updated: {new Date(item.attributes.updatedAt).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className='flex gap-2 ml-4'>
+                          <Link
+                            to={`/items/${item.id}`}
+                            className='px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors'
+                          >
+                            View
+                          </Link>
+                          <Form method='post' className='inline'>
+                            <input type='hidden' name='intent' value='delete' />
+                            <input type='hidden' name='id' value={item.id} />
+                            <button
+                              type='submit'
+                              className='px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors'
+                              onClick={(e) => {
+                                if (
+                                  !confirm(
+                                    `Are you sure you want to delete "${item.attributes.name}"?`,
+                                  )
+                                ) {
+                                  e.preventDefault();
+                                }
+                              }}
+                            >
+                              Delete
+                            </button>
+                          </Form>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Pagination */}
+                {items.meta.pagination && items.meta.pagination.totalPages > 1 && (
+                  <div className='mt-6 flex justify-center items-center gap-2'>
+                    {items.meta.pagination.hasPrev && (
+                      <Link
+                        to={`?page=${items.meta.pagination.page - 1}`}
+                        className='px-3 py-2 text-sm bg-white border border-gray-300 rounded hover:bg-gray-50'
+                      >
+                        Previous
+                      </Link>
+                    )}
+
+                    <span className='px-3 py-2 text-sm text-gray-600'>
+                      Page {items.meta.pagination.page} of {items.meta.pagination.totalPages}
+                    </span>
+
+                    {items.meta.pagination.hasNext && (
+                      <Link
+                        to={`?page=${items.meta.pagination.page + 1}`}
+                        className='px-3 py-2 text-sm bg-white border border-gray-300 rounded hover:bg-gray-50'
+                      >
+                        Next
+                      </Link>
+                    )}
+                  </div>
+                )}
               </div>
             ) : (
               <div className='flex items-center justify-center py-8'>
                 <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600'></div>
-                <span className='ml-3 text-gray-600'>Loading API data...</span>
+                <span className='ml-3 text-gray-600'>Loading items...</span>
               </div>
             )}
           </Card>
 
+          {/* API Information */}
           <Card variant='default'>
-            <h2 className='text-2xl font-semibold mb-4'>Getting Started</h2>
-            <div className='space-y-4'>
-              <div>
-                <h3 className='font-semibold mb-2'>1. Development Setup:</h3>
-                <code className='block bg-gray-100 p-3 rounded text-sm font-mono'>
-                  npm install && npm run dev
-                </code>
-                <p className='text-sm text-gray-600 mt-1'>
-                  Installs dependencies and starts all services with Turbo
-                </p>
+            <h2 className='text-2xl font-semibold mb-4'>API Endpoints</h2>
+            <div className='space-y-2 text-sm font-mono'>
+              <div className='flex gap-2'>
+                <span className='px-2 py-1 bg-green-100 text-green-800 rounded'>GET</span>
+                <span>/v1/items - List items with pagination</span>
               </div>
-              <div>
-                <h3 className='font-semibold mb-2'>2. Individual Services:</h3>
-                <div className='space-y-2'>
-                  <code className='block bg-gray-100 p-2 rounded text-sm font-mono'>
-                    npm run dev:api # NestJS API (port 3001)
-                  </code>
-                  <code className='block bg-gray-100 p-2 rounded text-sm font-mono'>
-                    npm run dev:web # React Router v7 (port 5173)
-                  </code>
-                </div>
+              <div className='flex gap-2'>
+                <span className='px-2 py-1 bg-blue-100 text-blue-800 rounded'>POST</span>
+                <span>/v1/items - Create new item</span>
               </div>
-              <div>
-                <h3 className='font-semibold mb-2'>3. Quality Checks:</h3>
-                <code className='block bg-gray-100 p-2 rounded text-sm font-mono'>
-                  npm run check # Linting & formatting
-                </code>
-                <code className='block bg-gray-100 p-2 rounded text-sm font-mono'>
-                  npm run check-types # TypeScript validation
-                </code>
+              <div className='flex gap-2'>
+                <span className='px-2 py-1 bg-green-100 text-green-800 rounded'>GET</span>
+                <span>/v1/items/:id - Get single item</span>
+              </div>
+              <div className='flex gap-2'>
+                <span className='px-2 py-1 bg-yellow-100 text-yellow-800 rounded'>PATCH</span>
+                <span>/v1/items/:id - Update item</span>
+              </div>
+              <div className='flex gap-2'>
+                <span className='px-2 py-1 bg-red-100 text-red-800 rounded'>DELETE</span>
+                <span>/v1/items/:id - Delete item</span>
               </div>
             </div>
-          </Card>
-
-          <Card variant='default'>
-            <h2 className='text-2xl font-semibold mb-4'>Clean Theme System</h2>
-            <div className='space-y-4'>
-              <p className='text-gray-600'>
-                Experience our clean CSS custom property theme that maps mood-based colors to
-                semantic components.
-              </p>
-              <div className='flex flex-wrap gap-3'>
-                <Link to='/theme-demo'>
-                  <Button variant='primary' size='md'>
-                    Explore Theme Demo
-                  </Button>
-                </Link>
-                <div className='flex gap-2 items-center'>
-                  <div className='w-8 h-8 rounded bg-primary'></div>
-                  <div className='w-8 h-8 rounded bg-secondary'></div>
-                  <div className='w-8 h-8 rounded bg-success'></div>
-                  <div className='w-8 h-8 rounded bg-destructive'></div>
-                  <span className='text-sm text-gray-500'>
-                    Semantic colors with mood-based values
-                  </span>
-                </div>
-              </div>
-              <div className='grid grid-cols-2 md:grid-cols-4 gap-2 text-xs'>
-                <div className='text-center p-2 bg-primary text-primary-foreground rounded'>
-                  Primary
-                </div>
-                <div className='text-center p-2 bg-secondary text-secondary-foreground rounded'>
-                  Secondary
-                </div>
-                <div className='text-center p-2 bg-success text-success-foreground rounded'>
-                  Success
-                </div>
-                <div className='text-center p-2 bg-destructive text-destructive-foreground rounded'>
-                  Destructive
-                </div>
-              </div>
+            <div className='mt-4'>
+              <Link
+                to='http://localhost:3001/api-docs'
+                target='_blank'
+                rel='noopener noreferrer'
+                className='text-blue-600 hover:text-blue-800 underline'
+              >
+                View Complete API Documentation →
+              </Link>
             </div>
           </Card>
         </div>
