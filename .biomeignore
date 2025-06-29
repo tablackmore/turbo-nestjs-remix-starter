@@ -29,3 +29,9 @@ apps/web/build/
 *.log
 .env
 .env.local
+
+dist/
+build/
+.turbo/
+.node_modules/
+.react-router/
