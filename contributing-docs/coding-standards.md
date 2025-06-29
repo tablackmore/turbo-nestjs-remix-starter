@@ -162,101 +162,306 @@ export function UserProfile({ userId, onUpdate }: UserProfileProps) {
 }
 ```
 
-### React 19 Hooks Usage
+### Form Management with useActionState (Preferred)
 
 ```tsx
-// Good: Use React 19's use() hook for data fetching
-import { use } from 'react';
-
-function UserProfile({ userPromise }: { userPromise: Promise<User> }) {
-  const user = use(userPromise);
-  
-  return <div>{user.name}</div>;
-}
-
-// Good: Use useOptimistic for optimistic updates
-import { useOptimistic } from 'react';
-
-function TodoList({ todos }: { todos: Todo[] }) {
-  const [optimisticTodos, addOptimisticTodo] = useOptimistic(
-    todos,
-    (state, newTodo: Todo) => [...state, newTodo]
-  );
-  
-  // Implementation
-}
-```
-
-### React 19 Actions
-
-```tsx
-// Good: Use React 19 actions for form handling
+// Good: Use React 19's useActionState for automatic form state management
 import { useActionState } from 'react';
 
-function CreateUserForm() {
-  const [state, formAction, isPending] = useActionState(createUserAction, {
-    error: null,
+interface FormState {
+  success: boolean;
+  error: string | null;
+  data?: unknown;
+}
+
+async function createItemAction(prevState: FormState, formData: FormData): Promise<FormState> {
+  try {
+    const name = formData.get('name') as string;
+    const description = formData.get('description') as string;
+    
+    const result = await itemsApi.createItem({ name, description });
+    return { success: true, error: null, data: result };
+  } catch (error) {
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Failed to create item' 
+    };
+  }
+}
+
+function ItemForm({ onSuccess }: { onSuccess?: () => void }) {
+  const [state, formAction, isPending] = useActionState(createItemAction, {
     success: false,
+    error: null,
   });
-  
+
+  React.useEffect(() => {
+    if (state.success) {
+      onSuccess?.();
+    }
+  }, [state.success, onSuccess]);
+
   return (
-    <form action={formAction}>
-      <input name="name" required />
-      <button type="submit" disabled={isPending}>
-        {isPending ? 'Creating...' : 'Create User'}
-      </button>
+    <form action={formAction} className="space-y-4">
+      <input name="name" required className="w-full p-2 border rounded" />
+      <textarea name="description" className="w-full p-2 border rounded" />
+      <SubmitButton />
       {state.error && <p className="text-red-500">{state.error}</p>}
     </form>
   );
 }
 ```
 
-### State Management
+### Form Status with useFormStatus (Preferred)
 
 ```tsx
-// Good: Use useReducer for complex state
-interface UserState {
-  user: User | null;
+// Good: Use useFormStatus for form status without prop drilling
+import { useFormStatus } from 'react-dom';
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  
+  return (
+    <button 
+      type="submit" 
+      disabled={pending}
+      className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+    >
+      {pending ? 'Creating...' : 'Create Item'}
+    </button>
+  );
+}
+
+// Good: Reusable form status indicator
+function FormStatusIndicator() {
+  const { pending, data } = useFormStatus();
+  
+  if (!pending) return null;
+  
+  return (
+    <div className="flex items-center text-blue-600">
+      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2" />
+      Processing...
+    </div>
+  );
+}
+```
+
+### Optimistic Updates with useOptimistic (Preferred)
+
+```tsx
+// Good: Use useOptimistic for immediate UI feedback
+import { useOptimistic, useTransition } from 'react';
+
+type OptimisticAction = { type: 'delete'; itemId: string };
+
+function optimisticReducer(items: Item[], action: OptimisticAction): Item[] {
+  switch (action.type) {
+    case 'delete':
+      return items.filter((item) => item.id !== action.itemId);
+    default:
+      return items;
+  }
+}
+
+function ItemsList({ initialItems }: { initialItems: Item[] }) {
+  const [isPending, startTransition] = useTransition();
+  const [optimisticItems, addOptimistic] = useOptimistic(initialItems, optimisticReducer);
+
+  const handleDelete = async (item: Item) => {
+    if (!confirm(`Delete "${item.name}"?`)) return;
+
+    // Immediately update UI
+    addOptimistic({ type: 'delete', itemId: item.id });
+
+    // Perform actual deletion
+    startTransition(async () => {
+      try {
+        await itemsApi.deleteItem(item.id);
+        // Success - optimistic update persists
+      } catch (error) {
+        console.error('Delete failed:', error);
+        // Error - optimistic update automatically reverts
+      }
+    });
+  };
+
+  return (
+    <div className="space-y-4">
+      {optimisticItems.map((item) => (
+        <div 
+          key={item.id}
+          className={`p-4 bg-gray-50 rounded-lg ${isPending ? 'opacity-60' : 'opacity-100'}`}
+        >
+          <h3 className="font-semibold">{item.name}</h3>
+          <button onClick={() => handleDelete(item)} className="text-red-600">
+            Delete
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+### Enhanced Error Boundaries (Preferred)
+
+```tsx
+// Good: Enhanced error boundary with React 19 patterns
+interface ErrorBoundaryProps {
+  children: ReactNode;
+  fallback?: ReactNode;
+  onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  resetKeys?: Array<string | number>;
+  resetOnPropsChange?: boolean;
+}
+
+enum ErrorCategory {
+  NETWORK = 'network',
+  VALIDATION = 'validation',
+  RENDER = 'render',
+  UNKNOWN = 'unknown',
+}
+
+function categorizeError(error: Error): ErrorCategory {
+  const message = error.message.toLowerCase();
+  if (message.includes('fetch') || message.includes('network')) {
+    return ErrorCategory.NETWORK;
+  }
+  if (message.includes('validation') || message.includes('invalid')) {
+    return ErrorCategory.VALIDATION;
+  }
+  return ErrorCategory.UNKNOWN;
+}
+
+export class ErrorBoundary extends Component<ErrorBoundaryProps, State> {
+  // Enhanced error boundary implementation with:
+  // - Error categorization for better user messages
+  // - Auto-retry mechanisms for network errors
+  // - Error logging with unique IDs
+  // - Smart recovery strategies per error type
+  
+  static getDerivedStateFromError(error: Error): Partial<State> {
+    const errorId = `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return { hasError: true, error, errorId };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    const category = categorizeError(error);
+    console.group('🚨 Error Boundary');
+    console.error('Error:', error);
+    console.error('Category:', category);
+    console.groupEnd();
+    
+    this.props.onError?.(error, errorInfo);
+  }
+
+  // ... implementation details
+}
+```
+
+### Custom Hooks for React 19 Patterns (Preferred)
+
+```tsx
+// Good: Reusable async action hook
+interface AsyncActionState<T = unknown> {
+  isPending: boolean;
+  error: string | null;
+  data: T | null;
+}
+
+export function useAsyncAction<T = unknown>() {
+  const [state, setState] = useState<AsyncActionState<T>>({
+    isPending: false,
+    error: null,
+    data: null,
+  });
+  const [isPending, startTransition] = useTransition();
+
+  const execute = useCallback(async (asyncFn: () => Promise<T>) => {
+    setState(prev => ({ ...prev, isPending: true, error: null }));
+    
+    startTransition(async () => {
+      try {
+        const result = await asyncFn();
+        setState({ isPending: false, error: null, data: result });
+        return result;
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'An error occurred';
+        setState({ isPending: false, error: errorMessage, data: null });
+        throw error;
+      }
+    });
+  }, []);
+
+  return {
+    state: { ...state, isPending: isPending || state.isPending },
+    execute,
+  };
+}
+```
+
+### Error Handling with React 19
+
+```tsx
+// Good: Comprehensive error handling strategy
+function App() {
+  return (
+    <ErrorBoundary
+      onError={(error, errorInfo) => {
+        // Global error tracking
+        console.group('🚨 Global Error');
+        console.error('Error:', error);
+        console.error('Info:', errorInfo);
+        console.groupEnd();
+      }}
+      resetOnPropsChange={true}
+    >
+      <Routes />
+    </ErrorBoundary>
+  );
+}
+
+// Good: Component-level error boundaries for granular handling
+function UserSection() {
+  return (
+    <ErrorBoundary resetKeys={[userId]} fallback={<UserSectionError />}>
+      <UserProfile />
+    </ErrorBoundary>
+  );
+}
+```
+
+### State Management with React 19
+
+```tsx
+// Good: Use useReducer for complex state with React 19 patterns
+interface AppState {
+  items: Item[];
   loading: boolean;
   error: string | null;
 }
 
-type UserAction = 
+type AppAction = 
   | { type: 'FETCH_START' }
-  | { type: 'FETCH_SUCCESS'; payload: User }
-  | { type: 'FETCH_ERROR'; payload: string };
+  | { type: 'FETCH_SUCCESS'; payload: Item[] }
+  | { type: 'FETCH_ERROR'; payload: string }
+  | { type: 'OPTIMISTIC_ADD'; payload: Item }
+  | { type: 'OPTIMISTIC_REMOVE'; payload: string };
 
-function userReducer(state: UserState, action: UserAction): UserState {
+function appReducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
     case 'FETCH_START':
       return { ...state, loading: true, error: null };
     case 'FETCH_SUCCESS':
-      return { ...state, loading: false, user: action.payload };
-    case 'FETCH_ERROR':
-      return { ...state, loading: false, error: action.payload };
+      return { ...state, loading: false, items: action.payload };
+    case 'OPTIMISTIC_ADD':
+      return { ...state, items: [...state.items, action.payload] };
+    case 'OPTIMISTIC_REMOVE':
+      return { ...state, items: state.items.filter(item => item.id !== action.payload) };
     default:
       return state;
   }
-}
-```
-
-### Event Handlers
-
-```tsx
-// Good: Use proper event handler typing
-function SearchInput({ onSearch }: { onSearch: (query: string) => void }) {
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const query = formData.get('search') as string;
-    onSearch(query);
-  };
-  
-  return (
-    <form onSubmit={handleSubmit}>
-      <input name="search" />
-    </form>
-  );
 }
 ```
 
