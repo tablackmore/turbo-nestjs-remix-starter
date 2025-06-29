@@ -1,6 +1,6 @@
 # Contributing to Turbo Monorepo
 
-Thank you for contributing to our monorepo! This document provides guidelines for contributing to our TypeScript, React Router v7, NestJS, and Tailwind CSS codebase.
+Thank you for contributing to our monorepo! This document provides guidelines for contributing to our TypeScript, React Router v7, NestJS, and Tailwind CSS v4 codebase.
 
 ## Quick Start
 

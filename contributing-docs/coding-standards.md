@@ -1,6 +1,6 @@
 # Coding Standards
 
-This document outlines the coding standards and best practices for contributing to this monorepo. These standards ensure consistency, maintainability, and quality across our TypeScript, React 19, React Router v7, NestJS, and Tailwind CSS codebase.
+This document outlines the coding standards and best practices for contributing to this monorepo. These standards ensure consistency, maintainability, and quality across our TypeScript, React 19, React Router v7, NestJS, and Tailwind CSS v4 codebase.
 
 ## Table of Contents
 
@@ -560,6 +560,23 @@ export function Button({ variant = 'primary', children, onClick }: ButtonProps) 
     </button>
   );
 }
+
+// Better: Use tailwind-variants for complex components (see Styling Guidelines)
+import { tv } from 'tailwind-variants';
+
+const buttonVariants = tv({
+  base: 'px-4 py-2 rounded-md font-medium transition-colors',
+  variants: {
+    variant: {
+      primary: 'bg-blue-600 hover:bg-blue-700 text-white',
+      secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-900',
+      danger: 'bg-red-600 hover:bg-red-700 text-white',
+    },
+  },
+  defaultVariants: {
+    variant: 'primary',
+  },
+});
 ```
 
 ### Dark Mode Support
