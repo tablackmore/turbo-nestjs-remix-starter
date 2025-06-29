@@ -53,6 +53,7 @@ npm run typecheck
 React Router v7 applications can be deployed to various platforms:
 
 ### Vercel (Recommended)
+
 Zero-config deployment with built-in React Router v7 support:
 
 ```sh
@@ -61,11 +62,13 @@ vercel
 ```
 
 ### Other Platforms
+
 - **Netlify** - Full-stack applications with serverless functions
 - **Railway** - Simple Node.js deployment
 - **Fly.io** - Global application deployment
 
 Make sure to deploy the output of `npm run build`:
+
 - `build/client` - Client-side assets
 - `build/server` - Server-side code
 
@@ -78,11 +81,11 @@ This application uses **Tailwind CSS v4** with a modern utility-first approach. 
 - **CSS imports** - Using `@import "tailwindcss"` syntax
 - **Component variants** - Type-safe styling with `tailwind-variants`
 
-See the [Vite CSS documentation](https://vitejs.dev/guide/features.html#css) for more information about CSS processing.
+See the [Vite CSS documentation](https://vitejs.dev/guide/features.html#css) for more details.
 
 ## API Integration
 
-This application connects to the NestJS API server running on `http://localhost:3001`. 
+This application connects to the NestJS API server running on `http://localhost:3001`.
 
 Example API usage:
 

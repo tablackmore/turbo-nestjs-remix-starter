@@ -1,43 +1,69 @@
-# Turbo Monorepo: NestJS + React Router + UI Library
+# Turbo Monorepo: NestJS REST API + React Router v7 + React 19
 
-A modern full-stack monorepo starter built with the latest technologies:
+A production-ready full-stack monorepo built with modern technologies and industry best practices:
 
-- **NestJS API** (`apps/api`) - Backend API server with TypeScript
-- **React Router v7 Web App** (`apps/web`) - Frontend web application with React 19
-- **Shared UI Library** (`packages/ui`) - Reusable React components
+- **NestJS REST API** (`apps/api`) - Comprehensive backend API with versioning, pagination, and docs
+- **React Router v7 + React 19 Web App** (`apps/web`) - Modern frontend with SSR and React 19 features
+- **Shared UI Library** (`packages/ui`) - Reusable React components with design system
 - **TypeScript Config** (`packages/typescript-config`) - Shared TypeScript configuration
 
-## ✨ Features
+## ✨ Key Features
 
-- 🚀 **React Router v7** - Latest routing with server-side rendering
-- ⚛️ **React 19** - Latest React with improved performance
-- 🎯 **NestJS** - Scalable Node.js framework for APIs
-- 🔧 **Turborepo** - High-performance build system
-- 🎨 **Tailwind CSS** - Utility-first CSS framework
-- 📏 **Biome** - Fast formatter and linter
-- 🛠️ **Chrome DevTools Workspace** - Save changes directly from DevTools
-- 📦 **TypeScript** - End-to-end type safety
-- ⚡ **Vite** - Lightning-fast build tool
+### 🚀 **Modern Frontend Stack**
+
+- **React Router v7** - Latest routing with server-side rendering
+- **React 19** - Enhanced forms with `useActionState`, optimistic updates with `useOptimistic`
+- **Enhanced Error Boundaries** - Smart error categorization and recovery strategies
+- **Type-safe API Integration** - Full TypeScript integration with backend
+
+### 🎯 **Production-Ready API**
+
+- **URL-based Versioning** - `/v1/` prefixed endpoints for API evolution
+- **Standard Response Format** - Consistent `success`, `data`, `meta` structure
+- **Comprehensive CRUD** - Items resource with full create, read, update, delete operations
+- **Pagination & Sorting** - Efficient data handling with metadata and navigation links
+- **OpenAPI/Swagger Docs** - Interactive API documentation
+- **Global Error Handling** - Standardized error responses with proper HTTP status codes
+
+### 🛠️ **Developer Experience**
+
+- **Turborepo** - High-performance build system with intelligent caching
+- **Biome** - Fast formatting and linting with consistent code style
+- **TypeScript** - End-to-end type safety across frontend and backend
+- **Hot Reload** - Instant development feedback across all applications
 
 ## Architecture
 
-```
+```text
 mono-site/
 ├── apps/
-│   ├── api/          # NestJS backend API (port 3001)
-│   └── web/          # React Router v7 frontend (port 5173)
+│   ├── api/                    # NestJS REST API (port 3001)
+│   │   ├── src/
+│   │   │   ├── common/         # Shared DTOs, interceptors, filters
+│   │   │   ├── v1/             # Versioned API endpoints
+│   │   │   │   ├── health/     # Health check endpoints
+│   │   │   │   └── items/      # Items CRUD resource
+│   │   │   └── main.ts
+│   │   └── API_DOCUMENTATION.md
+│   └── web/                    # React Router v7 + React 19 (port 5173)
+│       ├── app/
+│       │   ├── components/     # React 19 enhanced components
+│       │   ├── hooks/          # Custom React 19 hooks
+│       │   ├── lib/           # Type-safe API client
+│       │   ├── routes/        # Application routes
+│       │   └── types/         # TypeScript API types
+│       └── package.json
 ├── packages/
-│   ├── ui/           # Shared React components
-│   └── typescript-config/ # Shared TypeScript configuration
-├── biome.json        # Biome configuration
-└── turbo.json        # Turbo configuration
+│   ├── ui/                     # Shared React component library
+│   └── typescript-config/      # Shared TypeScript configuration
+└── contributing-docs/          # Development guidelines and standards
 ```
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm
 
 ### Installation
@@ -50,24 +76,28 @@ npm install
 ### Development
 
 #### Run all applications
+
 ```bash
 npm run dev
 ```
 
 This starts:
-- **API Server**: `http://localhost:3001`
-- **API Documentation**: `http://localhost:3001/api/docs`
-- **Web Application**: `http://localhost:5173`
+
+- **REST API Server**: `http://localhost:3001`
+- **Interactive API Documentation**: `http://localhost:3001/api-docs`
+- **React Router v7 Web App**: `http://localhost:5173`
 
 #### Run individual applications
 
 **API Server (NestJS):**
+
 ```bash
 cd apps/api
 npm run dev
 ```
 
 **Web Application (React Router v7):**
+
 ```bash
 cd apps/web
 npm run dev
@@ -90,182 +120,264 @@ npm run lint
 npm run check-types
 ```
 
-## 🚀 **NestJS API** (`apps/api`)
+## 🚀 **REST API** (`apps/api`)
 
-Modern backend API with:
-- RESTful endpoints with TypeScript
-- **OpenAPI/Swagger documentation** - Interactive API docs
-- CORS enabled for frontend consumption
-- Hot reload development
-- Built-in testing with Jest
+Production-ready NestJS API with comprehensive features:
 
-**Available Endpoints:**
-- `GET /` - Health check endpoint
-- `GET /api/data` - Sample data for frontend demonstration
+### **API Standards**
 
-### 📚 API Documentation
+- **URL-based Versioning**: All endpoints prefixed with `/v1/`
+- **Standard Response Format**: Consistent structure with success indicators
+- **Global Error Handling**: Proper HTTP status codes and error messages
+- **Request/Response Validation**: Type-safe with automatic validation
+- **Interactive Documentation**: OpenAPI/Swagger at `/api-docs`
 
-Interactive API documentation is available at:
-**http://localhost:3001/api/docs**
+### **Available Endpoints**
 
-The documentation includes:
-- Complete endpoint specifications
-- Request/response schemas
-- Interactive testing interface
-- TypeScript type definitions
-- Example requests and responses
+#### Health Check
 
-### Example API Usage
-
-```typescript
-// Fetch data from API
-const response = await fetch('http://localhost:3001/api/data');
-const data = await response.json();
-
-// Health check
-const healthResponse = await fetch('http://localhost:3001');
-const status = await healthResponse.json();
+```bash
+GET /v1/health              # Basic health status
+GET /v1/health/detailed     # Detailed system information
 ```
 
-## 🎨 **React Router v7 Web App** (`apps/web`)
+#### Items Resource (Full CRUD)
 
-Modern frontend application featuring:
-- **React 19** - Latest React with improved performance
-- **Server-side rendering** - Fast initial page loads
-- **Shared UI components** - From `@repo/ui` package
-- **Tailwind CSS** - Utility-first styling
-- **Chrome DevTools Workspace** - Save changes directly from DevTools
-- **TypeScript** - Full type safety
+```bash
+GET    /v1/items           # List items with pagination & sorting
+GET    /v1/items/:id       # Get single item
+POST   /v1/items           # Create new item
+PATCH  /v1/items/:id       # Update existing item
+DELETE /v1/items/:id       # Delete item
+```
 
-### Chrome DevTools Workspace Integration
+#### Query Parameters
 
-This starter includes Chrome DevTools workspace integration:
+- **Pagination**: `?page=1&limit=10`
+- **Sorting**: `?sort=name&order=asc`
+- **Combined**: `?page=2&limit=5&sort=createdAt&order=desc`
 
-1. Start the dev server (`npm run dev`)
-2. Open Chrome DevTools on `localhost:5173`
-3. Go to **Sources** → **Workspace** tab
-4. Click **"Connect"** next to your project folder
-5. Grant file access permission
-6. Edit CSS/JS in DevTools and save directly to source files!
+### **Standard Response Format**
 
-### Example Component Usage
-
-```tsx
-import { Button } from '@repo/ui/button';
-import { Card } from '@repo/ui/card';
-
-export default function HomePage() {
-  return (
-    <Card>
-      <h1>Welcome to React Router v7</h1>
-      <Button appName="web">Get Started</Button>
-    </Card>
-  );
+```json
+{
+  "success": true,
+  "data": {
+    "items": [...],
+    "pagination": {
+      "page": 1,
+      "limit": 10,
+      "total": 25,
+      "pages": 3,
+      "hasNext": true,
+      "hasPrev": false
+    }
+  },
+  "meta": {
+    "timestamp": "2024-01-01T12:00:00.000Z",
+    "version": "1.0.0",
+    "requestId": "uuid-here"
+  }
 }
 ```
+
+### **Interactive API Documentation**
+
+Comprehensive API documentation available at:
+**<http://localhost:3001/api-docs>**
+
+Features:
+
+- Live endpoint testing
+- Complete request/response schemas
+- Example payloads
+- Authentication documentation
+- TypeScript type exports
+
+## 🎨 **React Router v7 + React 19 Web App** (`apps/web`)
+
+Modern frontend application showcasing React 19 features:
+
+### **React 19 Features Implemented**
+
+#### **Enhanced Forms with `useActionState`**
+
+- Automatic form state management
+- Built-in pending states and error handling
+- No manual state management required
+
+```tsx
+const [state, formAction, isPending] = useActionState(createItemAction, initialState);
+
+<form action={formAction}>
+  <input name="name" disabled={isPending} />
+  <SubmitButton />
+</form>
+```
+
+#### **Optimistic UI Updates with `useOptimistic`**
+
+- Immediate UI feedback for delete operations
+- Automatic error recovery if server request fails
+- Seamless user experience
+
+```tsx
+const [optimisticItems, deleteOptimistic] = useOptimistic(items, removeItem);
+
+// UI updates instantly, reverts on error
+const handleDelete = (id) => deleteOptimistic(id);
+```
+
+#### **Enhanced Error Boundaries**
+
+- Smart error categorization (network, validation, render errors)
+- Automatic retry mechanisms with exponential backoff
+- Unique error IDs for debugging
+- Session storage error logging
+
+### **Type-Safe API Integration**
+
+Complete TypeScript integration with the backend:
+
+```typescript
+// Generated types from API
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  meta: ResponseMeta;
+}
+
+// Type-safe API client
+const api = {
+  items: {
+    list: (params?: PaginationParams): Promise<ApiResponse<ItemsResponse>>,
+    get: (id: string): Promise<ApiResponse<Item>>,
+    create: (data: CreateItemDto): Promise<ApiResponse<Item>>,
+    update: (id: string, data: UpdateItemDto): Promise<ApiResponse<Item>>,
+    delete: (id: string): Promise<ApiResponse<void>>
+  }
+};
+```
+
+### **Key Features**
+
+- **Server-side Rendering** - Fast initial page loads with React Router v7
+- **Optimistic Updates** - Instant UI feedback with error recovery
+- **Form Management** - React 19 `useActionState` patterns
+- **Error Handling** - Comprehensive error boundaries with recovery
+- **Real-time Health** - API status monitoring with health checks
+- **Responsive Design** - Modern UI with Tailwind CSS
 
 ## 📦 **Shared UI Library** (`packages/ui`)
 
-Reusable React components built with:
-- **React 19** - Latest React features
-- **TypeScript** - Full type definitions
-- **Tailwind CSS** - Modern utility-first styling with design tokens
-- **tailwind-variants** - Type-safe component variants and theming
+Design system components built with modern practices:
 
-**Design System:** See [Styling Guidelines](./contributing-docs/styling-guidelines.md) for comprehensive design system documentation.
+### **Component Library**
 
-**Available Components:**
-- `Button` - Interactive button with app name variants
-- `Card` - Container component for content sections
-- `Code` - Syntax-highlighted code display
+- **Button** - Interactive buttons with variants and loading states
+- **Card** - Container components for content sections
+- **Code** - Syntax-highlighted code display with proper formatting
 
-### Using UI Components
+### **Design System**
+
+- **Tailwind CSS** - Utility-first styling with design tokens
+- **tailwind-variants** - Type-safe component variants
+- **Consistent Theming** - Shared design tokens across applications
 
 ```tsx
 import { Button } from '@repo/ui/button';
 import { Card } from '@repo/ui/card';
-import { Code } from '@repo/ui/code';
 
-export default function ExamplePage() {
-  return (
-    <Card>
-      <h2>Example Components</h2>
-      <Button appName="web">Click me!</Button>
-      <Code children="console.log('Hello, World!');" />
-    </Card>
-  );
-}
+<Card>
+  <h2>Modern Components</h2>
+  <Button variant="primary" isLoading={isPending}>
+    Save Changes
+  </Button>
+</Card>
 ```
 
-## 🔧 **Turborepo Configuration**
+## 🔧 **Development Workflow**
 
-Optimized for development speed:
+### **Turborepo Optimization**
+
 - **Dependency-aware builds** - Packages build in correct order
-- **Intelligent caching** - Skip unchanged builds
+- **Intelligent caching** - Skip unchanged builds across the team
 - **Parallel execution** - Maximum CPU utilization
-- **Remote caching** - Share cache across team (configurable)
+- **Remote caching** - Share build cache (configurable)
 
-## Scripts Reference
+### **Code Quality Standards**
 
-### Root Level Scripts
-- `npm run dev` - Start all apps in development mode
-- `npm run build` - Build all packages and applications  
-- `npm run lint` - Format and lint with Biome
-- `npm run check-types` - Type check all TypeScript
+- **Biome Configuration** - Consistent formatting and linting
+- **TypeScript Strict Mode** - Maximum type safety
+- **React 19 Best Practices** - Modern patterns and hooks
+- **Commit Message Guidelines** - Structured commit format
+- **Automated Quality Checks** - Pre-commit hooks and CI integration
 
-### API Scripts (`apps/api`)
-- `npm run dev` - Development with hot reload
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run test` - Run test suite
+### **Scripts Reference**
 
-### Web Scripts (`apps/web`)
-- `npm run dev` - Development server (Vite)
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run typecheck` - Type check only
+#### Root Level
+
+```bash
+npm run dev          # Start all apps in development
+npm run build        # Build all packages and applications  
+npm run lint         # Format and lint with Biome
+npm run check-types  # Type check all TypeScript
+```
+
+#### API Server (`apps/api`)
+
+```bash
+npm run dev          # Development with hot reload
+npm run build        # Build for production
+npm run start        # Start production server
+npm run test         # Run comprehensive test suite
+```
+
+#### Web Application (`apps/web`)
+
+```bash
+npm run dev          # Development server with HMR
+npm run build        # Build for production with SSR
+npm run start        # Start production server
+npm run typecheck    # TypeScript type checking
+```
 
 ## Technology Stack
 
-| Category | Technology |
-|----------|------------|
-| **Frontend** | React 19, React Router v7, Tailwind CSS |
-| **Backend** | NestJS, Node.js, TypeScript |
-| **Build Tools** | Turborepo, Vite, TypeScript |
-| **Code Quality** | Biome (formatting + linting), TypeScript |
-| **Development** | Chrome DevTools Workspace integration |
+| Category | Technology | Purpose |
+|----------|------------|---------|
+| **Frontend** | React 19, React Router v7 | Modern UI with SSR and enhanced patterns |
+| **Styling** | Tailwind CSS, tailwind-variants | Utility-first CSS with design system |
+| **Backend** | NestJS, Node.js | Scalable API server with TypeScript |
+| **Database** | In-memory (demo) | Easily replaceable with any database |
+| **Build** | Turborepo, Vite | High-performance monorepo builds |
+| **Code Quality** | Biome, TypeScript | Formatting, linting, and type safety |
+| **Documentation** | OpenAPI/Swagger | Interactive API documentation |
 
-## Adding New Packages
+## Production Deployment
 
-To add a new package:
+### **API Deployment**
 
-1. Create directory in `packages/` or `apps/`
-2. Add package name to workspace in root `package.json`
-3. Create `package.json` in new package
-4. Update `turbo.json` for new build tasks (if needed)
+The NestJS API is production-ready with:
 
-Example new package structure:
-```
-packages/my-package/
-├── package.json
-├── src/
-│   └── index.ts
-└── tsconfig.json
-```
-
-## Deployment
-
-### API Deployment
-Deploy to any Node.js hosting service:
+- Environment-specific configuration
+- Proper error handling and logging
+- Health check endpoints for monitoring
+- OpenAPI documentation generation
 
 ```bash
 cd apps/api
 npm run build
-npm run start
+npm run start:prod
 ```
 
-### Web Deployment
-Deploy to services supporting Node.js SSR:
+### **Web Application Deployment**
+
+React Router v7 with SSR support:
+
+- Server-side rendering for performance
+- Static asset optimization
+- Progressive enhancement
 
 ```bash
 cd apps/web  
@@ -273,47 +385,42 @@ npm run build
 npm run start
 ```
 
-Popular deployment platforms:
-- **Vercel** - Zero-config React Router v7 support
-- **Netlify** - Full-stack applications
-- **Railway** - Simple Node.js deployment
-- **Fly.io** - Global application deployment
+### **Recommended Platforms**
 
-## Development Tips
+- **Vercel** - Zero-config React Router v7 deployment
+- **Railway** - Simple full-stack deployment
+- **Fly.io** - Global edge deployment
+- **AWS/GCP/Azure** - Enterprise cloud platforms
 
-### Hot Reload
-- API: Changes trigger automatic restart
-- Web: Instant HMR with Vite
-- UI Components: Hot reload across all consuming apps
+## Development Guidelines
 
-### Type Safety
-- Shared types between API and frontend
-- Full IntelliSense support
-- Catch errors at compile time
+### **Contributing**
 
-### Chrome DevTools Integration
-- Edit styles in DevTools → Save to source files
-- Debug with breakpoints in actual TypeScript
-- Automatic source map support
+We maintain high code quality standards:
 
-## Contributing
+- **[Contributing Guide](./contributing-docs/CONTRIBUTING.md)** - Development workflow
+- **[Coding Standards](./contributing-docs/coding-standards.md)** - React 19 patterns and TypeScript
+- **[Commit Guidelines](./contributing-docs/commit-message-guidelines.md)** - Structured commits
+- **[Styling Guidelines](./contributing-docs/styling-guidelines.md)** - Design system usage
 
-We welcome contributions! Please read our contribution guidelines:
+### **React 19 Best Practices**
 
-- **[Contributing Guide](./contributing-docs/CONTRIBUTING.md)** - Quick start and workflow
-- **[Coding Standards](./contributing-docs/coding-standards.md)** - Detailed coding guidelines
-- **[Commit Message Guidelines](./contributing-docs/commit-message-guidelines.md)** - Structured commit format
+- **Forms**: Use `useActionState` for automatic state management
+- **Optimistic Updates**: Use `useOptimistic` for immediate feedback
+- **Error Handling**: Enhanced error boundaries with recovery strategies
+- **Custom Hooks**: Wrap React 19 patterns for reusability
 
-### Quick Start
+### **API Standards**
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Follow our [coding standards](./contributing-docs/coding-standards.md)
-4. Run quality checks: `npm run lint && npm run check-types && npm run build`
-5. Submit a pull request
-
-For detailed guidelines, see our [Contributing Guide](./contributing-docs/CONTRIBUTING.md).
+- **Versioning**: URL-based with `/v1/` prefix
+- **Response Format**: Consistent success/error structure
+- **Validation**: Input validation with proper error messages
+- **Documentation**: Comprehensive OpenAPI specifications
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+**Built with ❤️ using the latest technologies for modern web development.**

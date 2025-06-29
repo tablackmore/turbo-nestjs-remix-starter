@@ -1,6 +1,7 @@
 # Commit Message Guidelines
 
-This document outlines the commit message format and guidelines for this monorepo. We follow a structured commit message format based on [Conventional Commits](https://www.conventionalcommits.org/) to enable automated tooling and maintain a clear project history.
+This document outlines the commit message format and guidelines for this monorepo. We follow
+[Conventional Commits](https://www.conventionalcommits.org/) to enable automated tooling and clear history.
 
 ## Table of Contents
 
@@ -18,7 +19,7 @@ This document outlines the commit message format and guidelines for this monorep
 
 Each commit message consists of a **header**, a **body**, and a **footer**:
 
-```
+```text
 <type>(<scope>): <subject>
 
 <body>
@@ -30,7 +31,7 @@ Each commit message consists of a **header**, a **body**, and a **footer**:
 
 The header is mandatory and must conform to the following format:
 
-```
+```text
 <type>(<scope>): <subject>
 ```
 
@@ -59,6 +60,7 @@ The type must be one of the following:
 ### Breaking Changes
 
 For commits that introduce breaking changes, use:
+
 - **feat!** for breaking feature changes
 - **fix!** for breaking bug fixes
 - Any type followed by **!** to indicate breaking changes
@@ -120,7 +122,7 @@ The subject contains a succinct description of the change:
 
 ### Good Examples
 
-```
+```text
 feat(api): add user profile endpoint
 fix(web): resolve infinite loading state
 docs(readme): update installation instructions
@@ -129,7 +131,7 @@ refactor(ui): extract common button styles
 
 ### Bad Examples
 
-```
+```text
 feat(api): Added user profile endpoint     // ❌ Past tense
 fix(web): Fix infinite loading state.      // ❌ Capitalized + period
 docs: updated the readme file              // ❌ Past tense
@@ -146,7 +148,7 @@ The body should include the motivation for the change and contrast this with pre
 
 ### Example
 
-```
+```text
 feat(api): add user profile endpoint
 
 Add GET /api/users/:id endpoint to retrieve user profile information.
@@ -158,17 +160,19 @@ appropriate error codes for invalid or non-existent users.
 
 ## Footer
 
-The footer should contain any information about **breaking changes** and reference GitHub issues that this commit **closes**.
+The footer should contain any information about **breaking changes** and reference GitHub issues
+that this commit **closes**.
 
 ### Breaking Changes
 
-Breaking changes should start with the word `BREAKING CHANGE:` with a space or two newlines. The rest of the commit message is then used for this.
+Breaking changes should start with the word `BREAKING CHANGE:` with a space or two newlines.
+The rest of the commit message is then used for this.
 
 ### Closing Issues
 
 If the commit closes or fixes GitHub issues, reference them in the footer:
 
-```
+```text
 Closes #123
 Fixes #456
 Resolves #789
@@ -176,7 +180,7 @@ Resolves #789
 
 ### Example
 
-```
+```text
 feat(auth)!: implement new JWT authentication
 
 Replace session-based auth with JWT tokens for better scalability.
@@ -443,11 +447,12 @@ These guidelines are enforced through:
 - **Code review**: Manual verification
 - **CI/CD pipeline**: Automated validation
 
-Remember: Good commit messages help teammates understand changes and enable powerful automation for releases and changelogs.
+Remember: Good commit messages help teammates understand changes and enable powerful automation
+for releases and changelogs.
 
 ## Resources
 
 - [Conventional Commits](https://www.conventionalcommits.org/)
-- [Angular Commit Guidelines](https://github.com/angular/angular/blob/main/contributing-docs/commit-message-guidelines.md)
+- [Angular Commit Guidelines](https://github.com/angular/angular/blob/main/contributing-docs/)
 - [Semantic Versioning](https://semver.org/)
-- [Keep a Changelog](https://keepachangelog.com/) 
+- [Keep a Changelog](https://keepachangelog.com/)

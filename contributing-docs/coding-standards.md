@@ -1,6 +1,8 @@
 # Coding Standards
 
-This document outlines the coding standards and best practices for contributing to this monorepo. These standards ensure consistency, maintainability, and quality across our TypeScript, React 19, React Router v7, NestJS, and Tailwind CSS v4 codebase.
+This document outlines the coding standards and best practices for contributing to this monorepo.
+These standards ensure consistency, maintainability, and quality across our TypeScript, React 19,
+React Router v7, NestJS, and Tailwind CSS v4 codebase.
 
 ## Table of Contents
 
@@ -802,7 +804,7 @@ const buttonVariants = tv({
 
 ### Project Structure
 
-```
+```text
 apps/
 ├── api/                    # NestJS backend
 │   ├── src/
@@ -974,4 +976,5 @@ These standards are enforced through:
 - **Code Reviews**: Manual review process
 - **CI/CD Pipeline**: Automated quality checks
 
-Remember: These standards exist to improve code quality and team productivity. When in doubt, prioritize readability and maintainability. 
+Remember: These standards exist to improve code quality and team productivity.
+When in doubt, prioritize readability and maintainability.
