@@ -6,11 +6,13 @@
     "dev": "turbo run dev",
     "lint": "biome lint .",
     "lint:fix": "biome lint --write .",
+    "lint:md": "markdownlint-cli2 \"*.md\" \"apps/*/README.md\" \"apps/*/API_DOCUMENTATION.md\" \"packages/*/README.md\" \"contributing-docs/**/*.md\" \".github/**/*.md\" \".vscode/**/*.md\"",
+    "lint:md:fix": "markdownlint-cli2 --fix \"*.md\" \"apps/*/README.md\" \"apps/*/API_DOCUMENTATION.md\" \"packages/*/README.md\" \"contributing-docs/**/*.md\" \".github/**/*.md\" \".vscode/**/*.md\"",
     "format": "biome format --write .",
     "check": "biome check .",
     "check:fix": "biome check --write .",
     "check-types": "turbo run check-types",
-    "quality-check": "npm run check && npm run check-types && npm run build"
+    "quality-check": "npm run check && npm run lint:md && npm run check-types && npm run build"
   },
   "engines": {
     "node": ">=18"
@@ -30,6 +32,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.6",
+    "markdownlint-cli2": "^0.18.1",
     "turbo": "^2.5.4",
     "typescript": "^5.8.3",
     "vite-plugin-devtools-json": "^0.2.0"
