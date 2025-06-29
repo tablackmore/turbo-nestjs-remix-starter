@@ -10,7 +10,6 @@ updates:
       time: "09:00"
     commit-message:
       prefix: "build(deps):"
-      include: "scope"
     pull-request-branch-name:
       separator: "/"
     open-pull-requests-limit: 5
@@ -27,7 +26,6 @@ updates:
       time: "09:00"
     commit-message:
       prefix: "build(api):"
-      include: "scope"
     pull-request-branch-name:
       separator: "/"
     open-pull-requests-limit: 3
@@ -45,7 +43,6 @@ updates:
       time: "09:00"
     commit-message:
       prefix: "build(web):"
-      include: "scope"
     pull-request-branch-name:
       separator: "/"
     open-pull-requests-limit: 3
@@ -63,7 +60,6 @@ updates:
       time: "09:00"
     commit-message:
       prefix: "build(ui):"
-      include: "scope"
     pull-request-branch-name:
       separator: "/"
     open-pull-requests-limit: 3
@@ -81,7 +77,6 @@ updates:
       time: "09:00"
     commit-message:
       prefix: "build(typescript-config):"
-      include: "scope"
     pull-request-branch-name:
       separator: "/"
     open-pull-requests-limit: 2
@@ -99,12 +94,9 @@ updates:
       time: "09:00"
     commit-message:
       prefix: "ci:"
-      include: "scope"
     pull-request-branch-name:
       separator: "/"
     open-pull-requests-limit: 2
-    reviewers:
-      - "@tomblackmore"
     labels:
       - "dependencies"
       - "github-actions"
