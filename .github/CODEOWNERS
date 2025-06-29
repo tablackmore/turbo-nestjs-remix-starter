@@ -1,0 +1,6 @@
+# Global code owners - automatically assigned as reviewers for all PRs
+/** @tablackmore
+
+# Specific ownership patterns (can be expanded later)
+# Example: /apps/api/ @tablackmore @api-team
+# Example: /packages/ui/ @tablackmore @design-team
