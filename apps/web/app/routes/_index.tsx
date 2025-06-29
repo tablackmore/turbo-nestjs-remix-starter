@@ -125,10 +125,24 @@ export default function Index() {
     <div className='min-h-screen bg-gray-50 py-12 px-4'>
       <div className='max-w-4xl mx-auto'>
         <header className='text-center mb-12'>
-          <h1 className='text-4xl font-bold text-gray-900 mb-4'>Items Management</h1>
+          <h1 className='text-4xl font-bold text-gray-900 mb-4'>Turbo Monorepo Demo</h1>
           <p className='text-xl text-gray-600 mb-8'>
-            React Router v7 + NestJS API with Pagination & CRUD Operations
+            React Router v7 + NestJS API with Items Management & Theme System
           </p>
+
+          {/* Navigation */}
+          <div className='flex gap-4 justify-center mb-6'>
+            <Link to='/theme-demo'>
+              <Button variant='secondary' size='md'>
+                🎨 Theme Demo
+              </Button>
+            </Link>
+            <a href='http://localhost:3001/api-docs' target='_blank' rel='noopener noreferrer'>
+              <Button variant='secondary' size='md'>
+                📚 API Docs
+              </Button>
+            </a>
+          </div>
 
           {health && (
             <div className='inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm'>
@@ -304,6 +318,52 @@ export default function Index() {
             )}
           </Card>
 
+          {/* Features Overview */}
+          <Card variant='default'>
+            <h2 className='text-2xl font-semibold mb-4'>Monorepo Features</h2>
+            <div className='grid md:grid-cols-3 gap-4'>
+              <div className='p-4 bg-blue-50 rounded-lg'>
+                <h3 className='font-semibold text-blue-900 mb-2'>Items API</h3>
+                <p className='text-blue-700 text-sm mb-3'>
+                  Full CRUD operations with pagination, sorting, and validation
+                </p>
+                <div className='text-xs text-blue-600'>
+                  ✓ Create, Read, Update, Delete
+                  <br />✓ Pagination & Sorting
+                  <br />✓ TypeScript Types
+                  <br />✓ Error Handling
+                </div>
+              </div>
+              <div className='p-4 bg-purple-50 rounded-lg'>
+                <h3 className='font-semibold text-purple-900 mb-2'>Theme System</h3>
+                <p className='text-purple-700 text-sm mb-3'>
+                  Clean CSS custom properties with semantic color mapping
+                </p>
+                <Link to='/theme-demo'>
+                  <Button variant='secondary' size='sm' className='w-full'>
+                    Explore Theme Demo →
+                  </Button>
+                </Link>
+              </div>
+              <div className='p-4 bg-green-50 rounded-lg'>
+                <h3 className='font-semibold text-green-900 mb-2'>API Documentation</h3>
+                <p className='text-green-700 text-sm mb-3'>
+                  Interactive OpenAPI documentation with examples
+                </p>
+                <a
+                  href='http://localhost:3001/api-docs'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='block'
+                >
+                  <Button variant='secondary' size='sm' className='w-full'>
+                    View API Docs →
+                  </Button>
+                </a>
+              </div>
+            </div>
+          </Card>
+
           {/* API Information */}
           <Card variant='default'>
             <h2 className='text-2xl font-semibold mb-4'>API Endpoints</h2>
@@ -328,16 +388,6 @@ export default function Index() {
                 <span className='px-2 py-1 bg-red-100 text-red-800 rounded'>DELETE</span>
                 <span>/v1/items/:id - Delete item</span>
               </div>
-            </div>
-            <div className='mt-4'>
-              <Link
-                to='http://localhost:3001/api-docs'
-                target='_blank'
-                rel='noopener noreferrer'
-                className='text-blue-600 hover:text-blue-800 underline'
-              >
-                View Complete API Documentation →
-              </Link>
             </div>
           </Card>
         </div>
