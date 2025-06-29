@@ -1,6 +1,5 @@
 import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiOperation, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ApiResponseDto } from '../../common/dto/api-response.dto';
 
 class HealthData {
   @ApiProperty()
@@ -40,7 +39,7 @@ export class HealthController {
     type: HealthResponseDto,
   })
   @HttpCode(HttpStatus.OK)
-  check(): ApiResponseDto<HealthData> {
+  check(): HealthResponseDto {
     return {
       success: true,
       data: {
