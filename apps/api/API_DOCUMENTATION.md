@@ -21,7 +21,8 @@ A comprehensive guide to the REST API interface, standards, and best practices.
 
 ## Overview
 
-This API follows RESTful principles and uses JSON for data exchange. All endpoints are designed to be intuitive, consistent, and follow industry best practices.
+This API follows RESTful principles and uses JSON for data exchange. All endpoints are designed
+to be intuitive, consistent, and follow industry best practices.
 
 ### Key Principles
 
@@ -34,25 +35,29 @@ This API follows RESTful principles and uses JSON for data exchange. All endpoin
 ## Base URL & Versioning
 
 ### Base URL
-```
+
+```text
 https://api.example.com/v1
 ```
 
 ### Versioning Strategy
 
 **URL Path Versioning** (Recommended)
-```
+
+```http
 GET /v1/users
 GET /v2/users
 ```
 
 **Header Versioning** (Alternative)
-```
+
+```http
 GET /users
 Accept: application/vnd.api+json;version=1
 ```
 
 ### Version Lifecycle
+
 - **v1**: Current stable version
 - **v2**: Next version (in development)
 - **Deprecation**: 6-month notice before removal
@@ -60,16 +65,19 @@ Accept: application/vnd.api+json;version=1
 ## Authentication
 
 ### Bearer Token Authentication
+
 ```http
 Authorization: Bearer <jwt_token>
 ```
 
 ### API Key Authentication (Alternative)
+
 ```http
 X-API-Key: <api_key>
 ```
 
 ### Authentication Flow
+
 1. **Login**: `POST /auth/login` → Returns JWT token
 2. **Refresh**: `POST /auth/refresh` → Returns new JWT token
 3. **Logout**: `POST /auth/logout` → Invalidates token
@@ -100,11 +108,13 @@ DELETE /users/123       # Delete user
 ## Request Format
 
 ### Content Type
+
 ```http
 Content-Type: application/json
 ```
 
 ### Request Structure
+
 ```json
 {
   "data": {
@@ -118,12 +128,14 @@ Content-Type: application/json
 ```
 
 ### URL Structure
-```
+
+```text
 /{version}/{resource}/{id}/{sub-resource}
 ```
 
 Examples:
-```
+
+```text
 /v1/users
 /v1/users/123
 /v1/users/123/posts
@@ -133,6 +145,7 @@ Examples:
 ## Response Format
 
 ### Success Response Structure
+
 ```json
 {
   "success": true,
@@ -161,6 +174,7 @@ Examples:
 ```
 
 ### Collection Response Structure
+
 ```json
 {
   "success": true,
@@ -193,6 +207,7 @@ Examples:
 ## Status Codes
 
 ### Success Codes
+
 | Code | Description | Usage |
 |------|-------------|-------|
 | `200` | OK | Successful GET, PUT, PATCH |
@@ -201,6 +216,7 @@ Examples:
 | `204` | No Content | Successful DELETE |
 
 ### Client Error Codes
+
 | Code | Description | Usage |
 |------|-------------|-------|
 | `400` | Bad Request | Invalid request format |
@@ -212,6 +228,7 @@ Examples:
 | `429` | Too Many Requests | Rate limit exceeded |
 
 ### Server Error Codes
+
 | Code | Description | Usage |
 |------|-------------|-------|
 | `500` | Internal Server Error | Unexpected server error |
@@ -221,6 +238,7 @@ Examples:
 ## Error Handling
 
 ### Error Response Structure
+
 ```json
 {
   "success": false,
@@ -248,6 +266,7 @@ Examples:
 ```
 
 ### Standard Error Codes
+
 ```json
 {
   "VALIDATION_ERROR": "Request validation failed",
@@ -261,6 +280,7 @@ Examples:
 ```
 
 ### Validation Error Format
+
 ```json
 {
   "success": false,
@@ -287,30 +307,35 @@ Examples:
 ## Pagination
 
 ### Query Parameters
-```
+
+```http
 GET /users?page=2&limit=20&sort=createdAt&order=desc
 ```
 
 ### Parameters
+
 - `page`: Page number (1-based, default: 1)
 - `limit`: Items per page (default: 20, max: 100)
 - `sort`: Sort field (default: `id`)
 - `order`: Sort direction (`asc` or `desc`, default: `asc`)
 
 ### Single Field Sorting
-```
+
+```http
 GET /users?page=1&limit=10&sort=name&order=asc
 GET /users?page=1&limit=10&sort=createdAt&order=desc
 GET /users?page=1&limit=10&sort=email&order=asc
 ```
 
 ### Multi-Field Sorting
-```
+
+```http
 GET /users?page=1&limit=10&sort[]=name:asc&sort[]=createdAt:desc
 GET /users?page=1&limit=10&sort=name,createdAt&order=asc,desc
 ```
 
 ### Pagination with Sorting Response
+
 ```json
 {
   "data": [
@@ -358,6 +383,7 @@ GET /users?page=1&limit=10&sort=name,createdAt&order=asc,desc
 ```
 
 ### Multi-Field Sorting Response
+
 ```json
 {
   "data": [ /* sorted items */ ],
@@ -387,11 +413,13 @@ GET /users?page=1&limit=10&sort=name,createdAt&order=asc,desc
 ```
 
 ### Combined with Filtering and Sorting
-```
+
+```http
 GET /users?page=1&limit=10&filter[status]=active&sort=name&order=asc
 ```
 
 **Response maintains all query parameters in links:**
+
 ```json
 {
   "data": [ /* filtered and sorted items */ ],
@@ -419,6 +447,7 @@ GET /users?page=1&limit=10&filter[status]=active&sort=name&order=asc
 ```
 
 ### Cursor-Based Pagination (Alternative)
+
 ```json
 {
   "data": [ /* items */ ],
@@ -439,32 +468,38 @@ GET /users?page=1&limit=10&filter[status]=active&sort=name&order=asc
 ## Filtering & Querying
 
 ### Basic Filtering
-```
+
+```http
 GET /users?status=active&role=admin
 ```
 
 ### Advanced Filtering
-```
+
+```http
 GET /users?filter[name][like]=john&filter[age][gte]=18&filter[age][lte]=65
 ```
 
 ### Search
-```
+
+```http
 GET /users?search=john&searchFields=name,email
 ```
 
 ### Inclusion of Related Resources
-```
+
+```http
 GET /users?include=posts,comments
 GET /users/123?include=posts.comments
 ```
 
 ### Field Selection (Sparse Fieldsets)
-```
+
+```http
 GET /users?fields[user]=name,email&fields[post]=title
 ```
 
 ### Filter Operators
+
 | Operator | Description | Example |
 |----------|-------------|---------|
 | `eq` | Equal | `filter[status][eq]=active` |
@@ -480,6 +515,7 @@ GET /users?fields[user]=name,email&fields[post]=title
 ## Rate Limiting
 
 ### Headers
+
 ```http
 X-RateLimit-Limit: 1000
 X-RateLimit-Remaining: 999
@@ -488,6 +524,7 @@ X-RateLimit-Window: 3600
 ```
 
 ### Rate Limit Response
+
 ```json
 {
   "success": false,
@@ -504,6 +541,7 @@ X-RateLimit-Window: 3600
 ```
 
 ### Rate Limiting Strategies
+
 - **Per API Key**: 10,000 requests/hour
 - **Per IP**: 1,000 requests/hour
 - **Per User**: 5,000 requests/hour
@@ -511,6 +549,7 @@ X-RateLimit-Window: 3600
 ## Content Negotiation
 
 ### Accept Headers
+
 ```http
 Accept: application/json
 Accept: application/xml
@@ -518,11 +557,13 @@ Accept: application/vnd.api+json
 ```
 
 ### Content-Type Response
+
 ```http
 Content-Type: application/json; charset=utf-8
 ```
 
 ### Compression
+
 ```http
 Accept-Encoding: gzip, deflate
 Content-Encoding: gzip
@@ -531,6 +572,7 @@ Content-Encoding: gzip
 ## CORS
 
 ### Allowed Origins
+
 ```http
 Access-Control-Allow-Origin: https://app.example.com
 Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS
@@ -539,6 +581,7 @@ Access-Control-Max-Age: 86400
 ```
 
 ### Preflight Request
+
 ```http
 OPTIONS /v1/users HTTP/1.1
 Origin: https://app.example.com
@@ -549,6 +592,7 @@ Access-Control-Request-Headers: Content-Type, Authorization
 ## Examples
 
 ### Create User
+
 ```http
 POST /v1/users
 Content-Type: application/json
@@ -566,7 +610,8 @@ Authorization: Bearer <token>
 }
 ```
 
-**Response: 201 Created**
+#### Response: 201 Created
+
 ```json
 {
   "success": true,
@@ -584,12 +629,14 @@ Authorization: Bearer <token>
 ```
 
 ### Get Users with Filtering
+
 ```http
 GET /v1/users?filter[status]=active&sort=createdAt&order=desc&page=1&limit=10
 Authorization: Bearer <token>
 ```
 
-**Response: 200 OK**
+#### Response: 200 OK
+
 ```json
 {
   "success": true,
@@ -621,6 +668,7 @@ Authorization: Bearer <token>
 ```
 
 ### Update User
+
 ```http
 PATCH /v1/users/123
 Content-Type: application/json
@@ -636,7 +684,8 @@ Authorization: Bearer <token>
 }
 ```
 
-**Response: 200 OK**
+#### Response: 200 OK
+
 ```json
 {
   "success": true,
@@ -653,6 +702,7 @@ Authorization: Bearer <token>
 ```
 
 ### Validation Error Example
+
 ```http
 POST /v1/users
 Content-Type: application/json
@@ -669,7 +719,8 @@ Authorization: Bearer <token>
 }
 ```
 
-**Response: 422 Unprocessable Entity**
+#### Response: 422 Unprocessable Entity
+
 ```json
 {
   "success": false,
@@ -722,4 +773,4 @@ This documentation can be implemented in NestJS using:
 7. **Implement rate limiting**
 8. **Support filtering and sorting**
 9. **Use HTTPS in production**
-10. **Document your API thoroughly** 
+10. **Document your API thoroughly**

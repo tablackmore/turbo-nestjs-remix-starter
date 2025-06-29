@@ -6,7 +6,7 @@ A comprehensive REST API built with NestJS following industry best practices and
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 
 ### Installation
@@ -23,17 +23,21 @@ npm run start:prod
 ```
 
 The API will be available at:
-- **API Server**: http://localhost:3001
-- **API Documentation**: http://localhost:3001/api-docs
-- **Health Check**: http://localhost:3001/v1/health
+
+- **API Server**: <http://localhost:3001>
+- **API Documentation**: <http://localhost:3001/api-docs>
+- **Health Check**: <http://localhost:3001/v1/health>
 
 ## 📚 API Documentation
 
 ### Interactive Documentation
-Visit [http://localhost:3001/api-docs](http://localhost:3001/api-docs) for interactive Swagger/OpenAPI documentation.
+
+Visit [http://localhost:3001/api-docs](http://localhost:3001/api-docs) for interactive API docs.
 
 ### Complete API Reference
+
 See [`API_DOCUMENTATION.md`](./API_DOCUMENTATION.md) for comprehensive API documentation including:
+
 - Authentication & Authorization
 - Request/Response formats
 - Error handling
@@ -44,13 +48,16 @@ See [`API_DOCUMENTATION.md`](./API_DOCUMENTATION.md) for comprehensive API docum
 ## 🛠 API Endpoints
 
 ### Health Check
-```
+
+```http
 GET /v1/health
 ```
+
 Returns API health status and uptime information.
 
 ### Items Resource
-```
+
+```http
 GET    /v1/items       # List items with pagination
 POST   /v1/items       # Create new item
 GET    /v1/items/:id   # Get item by ID
@@ -59,14 +66,17 @@ DELETE /v1/items/:id   # Delete item
 ```
 
 ### Root Endpoint
-```
+
+```http
 GET /
 ```
+
 Returns API information and documentation links.
 
 ## 📋 Request/Response Format
 
 ### Standard Success Response
+
 ```json
 {
   "success": true,
@@ -80,6 +90,7 @@ Returns API information and documentation links.
 ```
 
 ### Paginated Response
+
 ```json
 {
   "success": true,
@@ -107,6 +118,7 @@ Returns API information and documentation links.
 ```
 
 ### Error Response
+
 ```json
 {
   "success": false,
@@ -131,6 +143,7 @@ Returns API information and documentation links.
 ## 🔧 Features
 
 ### ✅ Implemented
+
 - **RESTful Architecture**: Following REST principles
 - **API Versioning**: URL-based versioning (`/v1/`)
 - **Request Validation**: Automatic validation with class-validator
@@ -144,6 +157,7 @@ Returns API information and documentation links.
 - **TypeScript**: Full TypeScript support with strict typing
 
 ### 🔄 Planned Features
+
 - **Authentication**: JWT-based authentication
 - **Authorization**: Role-based access control
 - **Rate Limiting**: Request throttling
@@ -156,7 +170,7 @@ Returns API information and documentation links.
 
 ## 🏗 Architecture
 
-```
+```text
 src/
 ├── common/                 # Shared utilities
 │   ├── dto/               # Data Transfer Objects
@@ -172,6 +186,7 @@ src/
 ```
 
 ### Design Patterns
+
 - **Module Pattern**: Feature-based modules
 - **DTO Pattern**: Request/response validation
 - **Interceptor Pattern**: Response transformation
@@ -233,12 +248,14 @@ REDIS_URL=                 # Redis connection for caching
 ## 📈 Performance
 
 ### Response Times
+
 - Health check: ~5ms
 - Items list: ~15ms
 - Item create/update: ~10ms
 - Item delete: ~8ms
 
 ### Throughput
+
 - Concurrent requests: 1000+
 - Memory usage: <100MB
 - CPU usage: <5% idle
@@ -246,12 +263,14 @@ REDIS_URL=                 # Redis connection for caching
 ## 🛡 Security
 
 ### Current Security Measures
+
 - Input validation and sanitization
 - CORS configuration
 - Helmet security headers (planned)
 - Rate limiting (planned)
 
 ### Planned Security Features
+
 - JWT authentication
 - API key authentication
 - Request logging
@@ -262,6 +281,7 @@ REDIS_URL=                 # Redis connection for caching
 ## 🚢 Deployment
 
 ### Docker (Planned)
+
 ```dockerfile
 FROM node:18-alpine
 WORKDIR /app
@@ -273,6 +293,7 @@ CMD ["npm", "run", "start:prod"]
 ```
 
 ### Production Checklist
+
 - [ ] Environment variables configured
 - [ ] Database migrations run
 - [ ] SSL/TLS certificates installed

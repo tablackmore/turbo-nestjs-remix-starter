@@ -1,6 +1,7 @@
 # Contributing to Turbo Monorepo
 
-Thank you for contributing to our monorepo! This document provides guidelines for contributing to our TypeScript, React Router v7, NestJS, and Tailwind CSS v4 codebase.
+Thank you for contributing to our monorepo! This document provides guidelines for contributing
+to our TypeScript, React Router v7, NestJS, and Tailwind CSS v4 codebase.
 
 ## Quick Start
 
@@ -87,7 +88,7 @@ npm run build
 
 Follow our [Commit Message Guidelines](./commit-message-guidelines.md) and use [conventional commits](https://www.conventionalcommits.org/):
 
-```
+```text
 feat(api): add user authentication endpoint
 fix(web): resolve hydration mismatch in date formatting
 docs(readme): update API documentation
@@ -133,7 +134,7 @@ Describe the approach taken.
 
 ## 🏗️ Project Structure
 
-```
+```text
 mono-site/
 ├── apps/
 │   ├── api/          # NestJS backend
@@ -258,6 +259,7 @@ function processData(data: UserData) {
 
 ---
 
-**Remember**: These guidelines exist to maintain code quality and consistency. When in doubt, ask questions and prioritize readable, maintainable code.
+**Remember**: These guidelines exist to maintain code quality and consistency.
+When in doubt, ask questions and prioritize readable, maintainable code.
 
-Thank you for contributing! 🎉 
+Thank you for contributing! 🎉

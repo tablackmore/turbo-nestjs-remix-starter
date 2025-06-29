@@ -1,6 +1,8 @@
 # Styling & Design System Guidelines
 
-This document outlines the styling standards and design system approach for the UI library using modern Tailwind CSS v4 best practices. Our design system prioritizes consistency, type safety, accessibility, and runtime customization.
+This document outlines the styling standards and design system approach for the UI library using
+modern Tailwind CSS v4 best practices. Our design system prioritizes consistency, type safety,
+accessibility, and runtime customization.
 
 ## Table of Contents
 
@@ -37,7 +39,7 @@ This document outlines the styling standards and design system approach for the 
 
 ### File Structure
 
-```
+```text
 packages/ui/
 ├── src/
 │   ├── button.tsx          # Button component implementation
@@ -742,4 +744,5 @@ When creating new components following this design system:
 5. **Add responsive variants** where applicable
 6. **Test accessibility** with keyboard navigation and screen readers
 
-This design system provides a solid foundation for building consistent, accessible, and customizable UI components while maintaining excellent developer experience and performance. 
+This design system provides a solid foundation for building consistent, accessible, and customizable
+UI components while maintaining excellent developer experience and performance.
