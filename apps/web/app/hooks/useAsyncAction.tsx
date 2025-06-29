@@ -119,6 +119,9 @@ export function useOptimisticAction<T>(
 
   const executeOptimistic = useCallback(
     async (optimisticValue: unknown, actionFn: () => Promise<T[]>) => {
+      // Store backup of original data before applying optimistic update
+      const backupData = data;
+
       // Apply optimistic update immediately
       const optimisticData = optimisticUpdate(data, optimisticValue);
       setData(optimisticData);
@@ -130,8 +133,8 @@ export function useOptimisticAction<T>(
           setData(result);
         } catch (error) {
           console.error('Optimistic action failed:', error);
-          // Revert optimistic update
-          setData(data);
+          // Revert to the backed-up original state
+          setData(backupData);
           setError(error instanceof Error ? error.message : 'An error occurred');
         }
       });
