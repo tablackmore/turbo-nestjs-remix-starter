@@ -59,6 +59,11 @@ export class PaginationMetaDto {
   hasPrev: boolean;
 }
 
+export class ItemsMetaDto extends ItemMetaDto {
+  @ApiProperty({ type: PaginationMetaDto })
+  pagination: PaginationMetaDto;
+}
+
 export class PaginationLinksDto {
   @ApiProperty()
   self: string;
@@ -94,26 +99,8 @@ export class ItemsListResponseDto {
   @ApiProperty({ type: [ItemDto] })
   data: ItemDto[];
 
-  @ApiProperty({
-    type: 'object',
-    properties: {
-      timestamp: { type: 'string' },
-      version: { type: 'string' },
-      requestId: { type: 'string' },
-      pagination: {
-        type: 'object',
-        properties: {
-          page: { type: 'number' },
-          limit: { type: 'number' },
-          total: { type: 'number' },
-          totalPages: { type: 'number' },
-          hasNext: { type: 'boolean' },
-          hasPrev: { type: 'boolean' },
-        },
-      },
-    },
-  })
-  meta: ItemMetaDto & { pagination: PaginationMetaDto };
+  @ApiProperty({ type: ItemsMetaDto })
+  meta: ItemsMetaDto;
 
   @ApiProperty({ type: PaginationLinksDto })
   links: PaginationLinksDto;
