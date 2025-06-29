@@ -77,11 +77,11 @@ export class ItemsController {
     });
 
     const links: PaginationLinksDto = {
-      self: `${baseUrl}?page=${page}&${queryParams}`,
-      first: `${baseUrl}?page=1&${queryParams}`,
-      last: `${baseUrl}?page=${totalPages}&${queryParams}`,
-      next: hasNext ? `${baseUrl}?page=${page + 1}&${queryParams}` : null,
-      prev: hasPrev ? `${baseUrl}?page=${page - 1}&${queryParams}` : null,
+      self: `${baseUrl}?page=${page}&${queryParams.toString()}`,
+      first: `${baseUrl}?page=1&${queryParams.toString()}`,
+      last: `${baseUrl}?page=${totalPages}&${queryParams.toString()}`,
+      next: hasNext ? `${baseUrl}?page=${page + 1}&${queryParams.toString()}` : null,
+      prev: hasPrev ? `${baseUrl}?page=${page - 1}&${queryParams.toString()}` : null,
     };
 
     const pagination: PaginationMetaDto = {
