@@ -47,9 +47,22 @@ export class ItemsService {
         const aValue = a[query.sort as keyof Item];
         const bValue = b[query.sort as keyof Item];
 
-        if (aValue < bValue) return query.order === 'asc' ? -1 : 1;
-        if (aValue > bValue) return query.order === 'asc' ? 1 : -1;
-        return 0;
+        let comparison = 0;
+
+        // Use localeCompare for string values to ensure proper ordering across locales
+        if (typeof aValue === 'string' && typeof bValue === 'string') {
+          comparison = aValue.localeCompare(bValue, undefined, {
+            sensitivity: 'base',
+            numeric: true,
+          });
+        } else {
+          // Fallback to standard comparison for non-string values
+          if (aValue < bValue) comparison = -1;
+          else if (aValue > bValue) comparison = 1;
+          else comparison = 0;
+        }
+
+        return query.order === 'asc' ? comparison : -comparison;
       });
     }
 
